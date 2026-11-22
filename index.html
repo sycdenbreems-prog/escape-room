@@ -1,0 +1,267 @@
+<!DOCTYPE html><html lang="nl"><head><meta charset="utf-8"><meta name="referrer" content="no-referrer"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Puzzel Escaperoom</title><style>
+:root{--bg:#f5f6f8;--c:#fff;--t:#1c2430;--a:#1f4e9c;--bd:#163a75;--mu:#667085;--r:#b42318;--g:#1a7f4b;--l:#d9dee8;color-scheme:light}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0 auto;background:var(--bg);color:var(--t);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;padding:28px 18px 40px;max-width:560px;min-height:100vh;overscroll-behavior:none}
+.logo{margin:0 0 22px;padding-bottom:14px;border-bottom:2px solid var(--a)}.logo b{display:block;color:var(--a);font-size:22px;font-weight:700;letter-spacing:.22em}.logo small{display:block;color:var(--mu);margin-top:4px;font-size:14px}
+.card{background:#fff;border-radius:6px;padding:16px 18px;margin:0 0 16px;border:1px solid var(--l)}
+h1,h2,h3{margin:20px 0 10px;font-weight:600;color:var(--t);letter-spacing:-.01em}h2{font-size:20px;margin-top:0}h3{font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--mu);font-weight:600}
+label{display:block;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--mu);margin:16px 0 6px}
+input,select{width:100%;background:#fff;color:var(--t);border:1px solid #c3cad8;border-radius:4px;padding:10px 12px;font-size:15px;outline:0}input:focus,select:focus{border-color:var(--a);box-shadow:0 0 0 3px #1f4e9c22}
+.ci{width:64px;display:inline-block;margin-left:8px;text-align:center}
+button{background:#fff;color:var(--t);border:1px solid #c3cad8;border-radius:4px;padding:10px 14px;margin:3px;font-size:14px;font-weight:600;cursor:pointer}
+button:hover{border-color:var(--a)}button:active{background:#eef2f9}
+.pri{width:100%;margin:10px 0 0;border:1px solid var(--a);padding:12px;font-size:15px;color:#fff;background:var(--a)}.pri:hover{background:var(--bd);border-color:var(--bd)}
+.tab{margin:3px 3px 3px 0}.tab.on{background:var(--a);border-color:var(--a);color:#fff}
+.grid{display:grid;margin:12px auto;background:#fff}
+.cell{aspect-ratio:1;border:1px solid #98a2b3;display:flex;align-items:center;justify-content:center;font-size:1.2em;font-weight:500;position:relative;background:#fff;cursor:pointer;user-select:none;font-variant-numeric:tabular-nums}
+.cell small{position:absolute;top:1px;left:2px;font-size:.5em;color:var(--mu);font-weight:600}
+.fx{font-weight:700;color:var(--a);background:#f3f5f9}
+.sel{outline:2px solid var(--a);outline-offset:-2px;z-index:1;background:#e6edf8!important}
+.pad{text-align:center}.pad button{min-width:44px;height:42px;margin:2px;padding:0 10px}
+.bar{position:sticky;top:0;background:var(--bg);padding:10px 0;z-index:5;display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--mu);border-bottom:1px solid var(--l);margin-bottom:14px}
+.bar b{font-size:22px;color:var(--t);letter-spacing:0;font-variant-numeric:tabular-nums}
+.ov{position:fixed;inset:0;background:#f5f6f8f7;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:1.6em;font-weight:600;text-align:center;z-index:9;color:var(--a)}
+.code{color:var(--g);font-size:1.3em;font-variant-numeric:tabular-nums}table{border-collapse:collapse;width:100%}td,th{padding:6px;text-align:left;border-bottom:1px solid var(--l)}
+ul,ol{padding-left:22px}li{margin:3px 0}#msg{margin-top:10px;font-weight:600}
+.mu{color:var(--mu);font-size:14px}.err{color:var(--r);font-weight:600}.lg select{padding:6px 2px;font-size:13px}.lg td,.lg th{padding:4px 2px;border:0}.lg th{font-size:12px;color:var(--mu);font-weight:600}select:disabled,input:read-only{background:#f1f3f7;color:var(--t)}
+.leg{padding:2px 6px;margin-right:8px}.msg{margin-top:10px;font-weight:600}.pk{display:block;margin:6px 0;text-transform:none;letter-spacing:0;font-size:15px;color:var(--t);font-weight:500}input[type=checkbox]{width:auto;margin:0 8px 0 0}
+details{background:#fff;border:1px solid var(--l);border-radius:6px;padding:10px 16px;margin:0 0 10px}summary{cursor:pointer;font-weight:600;padding:4px 0}details[open] summary{margin-bottom:8px;color:var(--a)}.ex{background:#f3f5f9;border-left:3px solid var(--a);padding:8px 12px;margin:10px 0;font-size:14px}.tip{background:#fff7e6;border-left:3px solid #d9822b;padding:8px 12px;margin:10px 0;font-size:14px}
+.sm{padding:5px 10px;margin:0 0 0 10px;font-size:12px}.pri.dg{background:var(--r);border-color:var(--r)}.pri.dg:hover{background:#8f1c12;border-color:#8f1c12}.pri.sec{background:#fff;color:var(--t);border-color:#c3cad8}.pri.sec:hover{background:#eef2f9;border-color:var(--a)}
+.md{position:fixed;inset:0;background:#1c243073;display:flex;align-items:center;justify-content:center;padding:18px;z-index:20}.md .card{max-width:420px;width:100%;margin:0}.bar{gap:6px 10px;flex-wrap:wrap}
+</style></head><body><div id="app"></div><script>
+const $=s=>document.querySelector(s),app=$('#app');
+const TY=['Sudoku','Tectonic','Murdoku','Logigram'];let S={};
+function rng(s){return()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const shuf=(a,R)=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=R()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const codeOf=i=>10+(rng(S.seed*977+i*31+5)()*90|0);
+const nb=(i,W,H,d)=>{const r=i/W|0,c=i%W,o=[];for(let a=-1;a<2;a++)for(let b=-1;b<2;b++){if(!a&&!b||(!d&&a&&b))continue;const y=r+a,x=c+b;if(y>=0&&y<H&&x>=0&&x<W)o.push(y*W+x)}return o};
+// generieke backtracker (MRV): telt oplossingen tot lim; met R vult hij g willekeurig
+function ds(g,cd,lim,R){let b=-1,bc=null;for(let p=0;p<g.length;p++)if(!g[p]){const c=cd(g,p);if(!bc||c.length<bc.length){b=p;bc=c;if(c.length<2)break}}
+if(b<0)return 1;let n=0;for(const v of R?shuf(bc,R):bc){g[b]=v;n+=ds(g,cd,lim-n,R);if(R&&n)return n;g[b]=0;if(n>=lim)break}return n}
+const PM=[];(function pm(a,r){if(!r.length){PM.push(a);return}r.forEach((v,i)=>pm([...a,v],r.filter((_,j)=>j!=i)))})([],[0,1,2,3,4]);
+/* ---------- generators ---------- */
+function mkSudoku(R){const ok=(g,p,v)=>{const r=p/9|0,c=p%9,br=r-r%3,bc=c-c%3;for(let k=0;k<9;k++)if(g[r*9+k]==v||g[k*9+c]==v||g[(br+(k/3|0))*9+bc+k%3]==v)return 0;return 1};
+const cd=(g,p)=>{const o=[];for(let v=1;v<10;v++)if(ok(g,p,v))o.push(v);return o};
+const sol=Array(81).fill(0);ds(sol,cd,1,R);const g=sol.slice();let k=0;
+for(const p of shuf([...Array(81).keys()],R)){if(k>=51)break;const v=g[p];g[p]=0;if(ds(g.slice(),cd,2)==1)k++;else g[p]=v}return{sol,g}}
+function mkTect(R){const W=7,H=7,n=49;for(;;){const reg=Array(n).fill(-1);let nr=0;
+for(const s of shuf([...Array(n).keys()],R)){if(reg[s]>=0)continue;const id=nr++;reg[s]=id;const cl=[s],t=2+(R()*4|0);
+while(cl.length<t){const f=[];cl.forEach(c=>nb(c,W,H,0).forEach(d=>{if(reg[d]<0)f.push(d)}));if(!f.length)break;const d=f[R()*f.length|0];reg[d]=id;cl.push(d)}}
+const sz=Array(nr).fill(0);reg.forEach(r=>sz[r]++);const nbs=[...Array(n).keys()].map(i=>nb(i,W,H,1));
+const cd=(g,i)=>{const o=[];for(let v=1;v<=sz[reg[i]];v++)if(!nbs[i].some(j=>g[j]==v)&&!g.some((x,j)=>x==v&&reg[j]==reg[i]))o.push(v);return o};
+const sol=Array(n).fill(0);if(!ds(sol,cd,1,R))continue;const g=sol.slice();let k=0;
+for(const p of shuf([...Array(n).keys()],R)){if(k>=33)break;const v=g[p];g[p]=0;if(ds(g.slice(),cd,2)==1)k++;else g[p]=v}
+return{reg,sol,g}}}
+const RM=['AABBB','ACCBB','DCCEE','DDCEE','DDDEE'],RN=['Keuken','Studeerkamer','Salon','Bibliotheek','Tuin'],NM=['Anna','Bram','Cas','Dora','Eli'];
+function mkMur(R){const rm=(r,c)=>RM[r].charCodeAt(c)-65,rw=(x,i)=>PM[x[0]][i],cl=(x,i)=>PM[x[1]][i],N=NM,sol=[R()*120|0,R()*120|0];
+let L=[];for(let a=0;a<120;a++)for(let b=0;b<120;b++)L.push([a,b]);const clues=[],room=(x,s)=>rm(rw(x,s),cl(x,s));
+for(let it=0;it<5000&&L.length>1;it++){const s=R()*5|0,t=R()*5|0,k=R()*5|0,r=R()*5|0,ty=R()*7|0;let f,tx;
+if(ty==0){f=x=>room(x,s)==k;tx=`${N[s]} zit in de ${RN[k]}`}else if(ty==1){f=x=>room(x,s)!=k;tx=`${N[s]} zit niet in de ${RN[k]}`}
+else if(ty==2){f=x=>rw(x,s)==r;tx=`${N[s]} zit in rij ${r+1}`}else if(ty==3){f=x=>cl(x,s)==r;tx=`${N[s]} zit in kolom ${r+1}`}
+else{if(s==t)continue;if(ty==4){f=x=>cl(x,s)<cl(x,t);tx=`${N[s]} zit (ergens) links van ${N[t]}`}else if(ty==5){f=x=>rw(x,s)<rw(x,t);tx=`${N[s]} zit (ergens) boven ${N[t]}`}else{f=x=>room(x,s)==room(x,t);tx=`${N[s]} en ${N[t]} zitten in dezelfde kamer`}}
+if(!f(sol))continue;const M=L.filter(f);if(M.length<L.length){L=M;clues.push(tx)}}
+const g=Array(25).fill(0);for(let i=0;i<5;i++)g[rw(sol,i)*5+cl(sol,i)]=i+1;return{sol:g,clues}}
+function mkLog(R){const C=[['Plek 1','Plek 2','Plek 3','Plek 4','Plek 5'],NM,['Bakker','Arts','Pilot','Kok','Chauffeur'],['Rood','Blauw','Groen','Geel','Wit']];
+const T=14400*120,X=new Uint8Array(T),Y=new Uint8Array(T),Z=new Uint8Array(T);let q=0;for(let a=0;a<120;a++)for(let b=0;b<120;b++)for(let c=0;c<120;c++){X[q]=a;Y[q]=b;Z[q++]=c}
+const sa=R()*120|0,sb=R()*120|0,sc=R()*120|0,pos=(x,y,z,k,i)=>k?PM[[0,x,y,z][k]][i]:i;let L=T;const clues=[];
+for(let it=0;it<4000&&L>1;it++){const k=R()*4|0,l=R()*4|0,i=R()*5|0,j=R()*5|0;if(k==l)continue;let ty=[0,0,1,2,3,3][R()*6|0];if((!k||!l)&&ty>1)ty=R()*2|0;
+const f=(x,y,z)=>{const a=pos(x,y,z,k,i),b=pos(x,y,z,l,j);return ty==0?a==b:ty==1?a!=b:ty==2?Math.abs(a-b)==1:a<b};
+if(!f(sa,sb,sc))continue;let n=0;for(let q=0;q<L;q++)if(f(X[q],Y[q],Z[q]))n++;if(n==L)continue;
+let w=0;for(let q=0;q<L;q++)if(f(X[q],Y[q],Z[q])){X[w]=X[q];Y[w]=Y[q];Z[w]=Z[q];w++}L=w;
+const A=C[k][i],B=C[l][j];clues.push(ty==0?`${A} hoort bij ${B}`:ty==1?`${A} hoort niet bij ${B}`:ty==2?`${A} en ${B} staan direct naast elkaar`:`${A} staat (ergens) links van ${B}`)}
+return{C,CN:['Naam','Beroep','Kleur'],clues,sol:[PM[sa],PM[sb],PM[sc]]}}
+function mkBig(R,n){const K=5,M=6,NV=K*M,CN=['Naam','Beroep','Kleur','Huisdier'],
+C=[['Plek 1','Plek 2','Plek 3','Plek 4','Plek 5','Plek 6'],['Anna','Bram','Cas','Dora','Eli','Fenna'],['Bakker','Arts','Piloot','Kok','Chauffeur','Leraar'],['Rood','Blauw','Groen','Geel','Wit','Zwart'],['Hond','Kat','Vogel','Vis','Konijn','Slang']];
+const sol=C.map((_,k)=>k?shuf([...Array(M).keys()],R):[...Array(M).keys()]);
+const P=v=>sol[(v/M)|0][v%M],lab=v=>C[(v/M)|0][v%M],al=(t,a,b)=>t==0?a==b:t==1?a!=b:t==2?Math.abs(a-b)==1:t==3?a<b:Math.abs(a-b)==2;
+const pc=x=>{let c=0;while(x){x&=x-1;c++}return c};
+function count(cons,lim){const adj=Array.from({length:NV},()=>[]);cons.forEach(c=>{adj[c.a].push(c);adj[c.b].push(c)});
+const dom=new Int32Array(NV).fill((1<<M)-1);for(let i=0;i<M;i++)dom[i]=1<<i;
+function rec(dom,done,lim){let b=-1,bs=99;for(let v=0;v<NV;v++)if(!done[v]){const s=pc(dom[v]);if(!s)return 0;if(s<bs){bs=s;b=v;if(s==1)break}}
+if(b<0)return 1;let n=0;const k=(b/M)|0;
+for(let p=0;p<M&&n<lim;p++){if(!(dom[b]>>p&1))continue;const d=dom.slice(),dn=done.slice();d[b]=1<<p;dn[b]=1;let ok=1;
+for(let i=0;i<M&&ok;i++){const u=k*M+i;if(u!=b){d[u]&=~(1<<p);if(!d[u])ok=0}}
+for(const c of adj[b]){if(!ok)break;const a=c.a==b,y=a?c.b:c.a;let m=0;for(let q=0;q<M;q++)if(a?al(c.t,p,q):al(c.t,q,p))m|=1<<q;d[y]&=m;if(!d[y])ok=0}
+if(ok)n+=rec(d,dn,lim-n)}return n}
+return rec(dom,new Uint8Array(NV),lim)}
+const cons=[],seen=new Set();
+const add=()=>{const k=R()*K|0,l=R()*K|0;if(k==l)return 0;const a=k*M+(R()*M|0),b=l*M+(R()*M|0);let t=[0,0,0,1,2,2,3,3,4][R()*9|0];if(!k||!l)t=R()<.6?0:1;
+if(!al(t,P(a),P(b)))return 0;const key=a+','+b+','+t;if(seen.has(key))return 0;seen.add(key);cons.push({a,b,t});return 1};
+let g=0,uq=0;while(g++<60&&!uq){for(let j=0;j<10;)j+=add();uq=count(cons,2)==1}
+if(!uq)for(let v=M;v<NV;v++)cons.push({a:v,b:P(v),t:0});
+const rem=[],t0=performance.now();for(const c of shuf(cons,R)){if(performance.now()-t0>3000)break;const i=cons.indexOf(c);cons.splice(i,1);if(count(cons,2)!=1)cons.splice(i,0,c);else rem.push(c)}
+// extra aanwijzingen terugzetten: makkelijker en meer ruimte voor controle
+shuf(rem.filter(c=>c.t==0||c.t==2||c.t==3),R).slice(0,6).forEach(c=>cons.push(c));
+const tx=c=>{const A=lab(c.a),B=lab(c.b);return[`${A} hoort bij ${B}`,`${A} hoort niet bij ${B}`,`${A} en ${B} staan direct naast elkaar`,`${A} staat links van ${B} (niet per se direct)`,`${A} en ${B} staan met precies één plek ertussen`][c.t]};
+const clues=shuf(cons,R).map(tx);
+const base=[];for(let j=0;j<n;j++)base.push({l:`P${j+1}`,v:codeOf(j)});
+const vs=shuf([...Array(NV-M).keys()].map(x=>x+M),R);
+vs.slice(0,8).forEach(v=>base.push({l:`plek van ${lab(v)}`,v:P(v)+1}));
+vs.slice(8,13).forEach(v=>base.push({l:`aantal letters van ${lab(v)}`,v:lab(v).length}));
+const B=shuf(base,R),ops=['×','+','−','×','+','²','−','+'],st=[],MD=999983,nmOf=i=>i<26?String.fromCharCode(65+i):String.fromCharCode(64+(i/26|0))+String.fromCharCode(65+i%26);
+let acc=B[0].v,nm=B[0].l;
+for(let i=1;i<B.length;i++){const L=nmOf(i-1),b=B[i],op=ops[(i-1)%ops.length];let x,s;
+if(op=='×'){x=acc*b.v%MD;s=`${L} = (${nm} × ${b.l}) mod ${MD}`}
+else if(op=='²'){x=(acc*acc+b.v)%MD;s=`${L} = (${nm} × ${nm} + ${b.l}) mod ${MD}`}
+else if(op=='+'){x=acc+b.v;s=`${L} = ${nm} + ${b.l}`}
+else if(acc<b.v){x=b.v-acc;s=`${L} = ${b.l} − ${nm}`}else{x=acc-b.v;s=`${L} = ${nm} − ${b.l}`}
+st.push(s);acc=x;nm=L}
+st.push(`Kluiscode = (${nm} mod 900000) + 100000`);
+return{C,CN,clues,sol:sol.slice(1),steps:st,fin:String(acc%900000+100000)}}
+/* ---------- veilige DOM-helpers (geen innerHTML) ---------- */
+const E=(t,a,...k)=>{const e=document.createElement(t);for(const x in a||{}){const v=a[x];
+if(x=='class')e.className=v;else if(x=='on')for(const ev in v)e.addEventListener(ev,v[ev]);else if(x=='style')Object.assign(e.style,v);else e[x]=v}
+k.flat(9).forEach(c=>{if(c!=null&&c!==false)e.append(c.nodeType?c:String(c))});return e};
+const put=(n,...k)=>n.replaceChildren(...k.flat(9).filter(c=>c!=null&&c!==false).map(c=>c.nodeType?c:document.createTextNode(String(c))));
+let KD=null;const rmKD=()=>{if(KD)document.removeEventListener('keydown',KD);KD=null};
+/* ---------- afronden + som ---------- */
+function fin(msg,go){return E('button',{class:'pri',on:{click:()=>put(msg,E('div',{class:'card'},E('b',null,'Weet je zeker dat je deze puzzel wilt afronden?'),E('p',null,'Dit kan niet ongedaan worden gemaakt.'),E('button',{class:'pri',on:{click:go}},'Ja, afronden'),E('button',{on:{click:()=>put(msg)}},'Nee, terug')))}},'Puzzel afronden')}
+// De som is alleen uit te rekenen met de opgeloste puzzel. Het antwoord is de code van de puzzel.
+function somCard(i,t,p){const R=rng(S.seed*271+i*13+7),code=codeOf(i);let base=0,tx;
+if(t<2){const W=t?7:9,c=shuf([...p.g.keys()].filter(x=>!p.g[x]),R).slice(0,8).sort((a,b)=>a-b);c.forEach(x=>base+=p.sol[x]);
+tx=`Tel de cijfers op die in deze vakjes staan (rij, kolom): ${c.map(x=>`(${(x/W|0)+1},${x%W+1})`).join('  ')}.`}
+else if(t==2){const bc=R()<.5;for(let r=0;r<5;r++){const q=p.sol.findIndex((v,x)=>v&&(bc?x%5:x/5|0)==r);base+=(r+1)*NM[p.sol[q]-1].length}
+tx=`Kijk bij elke ${bc?'kolom':'rij'} welke persoon daar staat. Vermenigvuldig het aantal letters van zijn naam met het nummer van de ${bc?'kolom':'rij'} (1 t/m 5) en tel alle vijf de uitkomsten op.`}
+else{const rot=R()*3|0,l=[];for(let pl=0;pl<5;pl++){const k=(pl+rot)%3;base+=p.C[k+1][p.sol[k].indexOf(pl)].length;l.push(`plek ${pl+1}: ${p.CN[k].toLowerCase()}`)}
+tx=`Tel het aantal letters op van: ${l.join(', ')}.`}
+const d=code-base;
+return E('div',{class:'card'},E('b',null,'Puzzel afgerond. Jouw som:'),E('p',null,tx),E('p',null,d>=0?`Tel daar ${d} bij op.`:`Trek daar ${-d} vanaf.`),E('p',null,'Onthoud dit antwoord. Je geeft het pas door als de hoofdpuzzel is opgelost.'))}
+/* ---------- logigram-tabel (gedeeld) ---------- */
+function logTable(root,p,o){const M=p.C[0].length,w=p.C.length-1;let lk=!!o.locked;p.sel=p.sel||Array(M*w).fill(-1);
+function draw(){const msg=E('div',{class:'msg'});
+const rows=p.C[0].map((pl,r)=>E('tr',null,E('td',null,pl),p.CN.map((_,k)=>{const s=E('select',{disabled:lk,on:{change:()=>{p.sel[r*w+k]=+s.value;save()}}},E('option',{value:'-1'},'–'),p.C[k+1].map((n,j)=>E('option',{value:String(j)},n)));s.value=String(p.sel[r*w+k]);return E('td',null,s)})));
+const btn=lk?null:fin(msg,()=>{lk=true;draw()});
+put(root,E('table',{class:'lg'},E('tr',null,E('th'),p.CN.map(n=>E('th',null,n))),rows),btn,msg);if(lk)o.done(msg)}
+draw()}
+/* ---------- grid UI ---------- */
+function gridUI(root,o){let sel=-1,lk=!!o.locked;const v=o.vals;rmKD();
+const set=n=>{if(!lk&&sel>=0&&!(o.fx&&o.fx[sel])){v[sel]=n;save();draw()}};
+function draw(){const msg=E('div',{class:'msg'});
+const g=E('div',{class:'grid',style:{gridTemplateColumns:`repeat(${o.cols},1fr)`,maxWidth:o.cols*(o.w||46)+'px'}},v.map((x,i)=>{const r=(i/o.cols)|0,c=i%o.cols;
+return E('div',{class:'cell'+(o.fx&&o.fx[i]?' fx':'')+(i==sel?' sel':''),style:{borderWidth:o.bd(r,c).map(z=>z?'3px':'1px').join(' '),background:o.bg?o.bg(r,c):''},on:{click:()=>{if(!lk){sel=i;draw()}}}},x?(o.sh?o.sh(x):x):'')}));
+const pad=lk?null:E('div',{class:'pad'},[...Array(o.max)].map((_,k)=>E('button',{on:{click:()=>set(k+1)}},o.sh?o.sh(k+1):k+1)),E('button',{on:{click:()=>set(0)}},'Wis'));
+const chk=lk?null:fin(msg,()=>{lk=true;sel=-1;draw()});
+put(root,g,pad,chk,msg);if(lk)o.done(msg)}
+KD=e=>{if(/^[0-9]$/.test(e.key)&&+e.key<=o.max)set(+e.key)};document.addEventListener('keydown',KD);draw()}
+/* ---------- schermen ---------- */
+// Tijden gelden voor 2 puzzels per persoon; de echte tijd schaalt mee met "puzzels per persoon".
+const TIJDEN=[[20,'Zeer extreem'],[30,'Extreem'],[40,'Moeilijk'],[50,'Normaal'],[60,'Makkelijk'],[75,'Rustig'],[90,'Ruim'],[120,'Heel ruim'],[150,'Zeer ruim'],[180,'Maximaal']];
+const ov=(...k)=>app.append(E('div',{class:'ov'},k,E('button',{on:{click:home}},'Opnieuw')));
+/* ---------- uitleg ---------- */
+function mg(rows,bs){const n=rows.length,w=rows[0].length;return E('div',{class:'grid',style:{gridTemplateColumns:`repeat(${w},1fr)`,maxWidth:w*40+'px'}},rows.flat().map((x,i)=>{const r=(i/w|0),c=i%w;
+return E('div',{class:'cell'+(x[0]=='*'?' fx':''),style:{borderWidth:[r%bs==0,c%bs==bs-1,r%bs==bs-1,c%bs==0].map(z=>z?'3px':'1px').join(' ')}},x==='.'?'':String(x).replace('*',''))}))}
+function uitleg(){const sec=(t,...k)=>E('details',null,E('summary',null,t),k);
+put(app,E('div',{class:'logo'},E('b',null,'ESCAPEROOM'),E('small',null,'Uitleg en spelregels')),
+E('p',null,'Lees dit goed door voordat je begint. Klik op een kopje om het open te klappen.'),
+sec('Het doel van het spel',E('p',null,'Jullie zitten opgesloten. Alleen met een 6-cijferige kluiscode kunnen jullie ontsnappen, en die code krijg je alleen als jullie alle puzzels goed oplossen en daarna een lange, moeilijke som goed uitrekenen. Er is één tijdslimiet: de klok loopt op het apparaat van de hoofdpuzzel.')),
+sec('Hoe het spel verloopt',E('ol',null,
+E('li',null,'Eén apparaat is de ',E('b',null,'hoofdpuzzel'),' (de host). Alle anderen zijn ',E('b',null,'oplossers'),'. Vul overal hetzelfde aantal spelers, dezelfde puzzels per persoon, dezelfde seed en dezelfde moeilijkheid in.'),
+E('li',null,'In de lobby zie je het schema met alle puzzels. Overleg wie welke puzzels doet. Elke speler kiest precies zijn eigen aantal puzzels, en elke puzzel wordt door één speler gedaan.'),
+E('li',null,'De host start het spel en de klok gaat lopen. De oplossers spelen zonder klok.'),
+E('li',null,'Los je puzzel op en klik op ',E('b',null,'Puzzel afronden'),'. Je krijgt de vraag of je het zeker weet. Dit kan niet ongedaan worden gemaakt. Je krijgt dus ',E('b',null,'geen'),' melding of je puzzel goed of fout is.'),
+E('li',null,'Direct na het afronden krijg je een som. Die kun je alleen uitrekenen met de opgeloste puzzel. Het antwoord is jouw getal. Schrijf het op en onthoud het.'),
+E('li',null,'Ondertussen lost de host het grote logigram op en rondt dat af.'),
+E('li',null,'Pas daarna geven alle spelers hun antwoord door aan de host, die ze invult. Er komt geen melding of een antwoord klopt.'),
+E('li',null,'Als alle antwoorden zijn ingevoerd, verschijnt de laatste som. Die gebruikt jullie antwoorden en de oplossing van de hoofdpuzzel. De uitkomst is de kluiscode.'),
+E('li',null,'Klopt de kluiscode, dan zijn jullie ontsnapt. Is de tijd eerder op, dan niet.'))),
+sec('Sudoku',E('p',null,'Vul het rooster zo in dat in elke rij, elke kolom en elk dik omlijnd blok alle cijfers precies één keer staan (in het spel: cijfers 1 t/m 9 in een 9×9-rooster met 3×3-blokken). De vetgedrukte cijfers staan al vast.'),
+E('div',{class:'ex'},E('b',null,'Voorbeeld in klein formaat (4×4, cijfers 1 t/m 4)'),mg([['*1','.','.','*4'],['.','*4','*1','.'],['*2','.','*4','.'],['.','*3','.','*1']],2),
+E('p',null,'Het blok linksboven heeft al 1 en 4, dus de lege vakjes daar zijn 2 en 3. Kolom 2 bevat al een 4 en een 3, dus het vakje in rij 1, kolom 2 kan geen 3 zijn en moet 2 zijn. Het vakje ernaast (rij 1, kolom 3) wordt dan 3.'))),
+sec('Tectonic',E('p',null,'Het rooster is verdeeld in gebieden met dikke randen. Een gebied van n vakjes bevat de cijfers 1 t/m n, elk één keer. Bovendien mogen twee gelijke cijfers elkaar nergens raken, ook niet diagonaal. De vetgedrukte cijfers staan al vast.'),
+E('div',{class:'ex'},E('b',null,'Voorbeeld'),E('p',null,'Een gebied van 3 vakjes bevat precies 1, 2 en 3. Staat er in een buurvak (ook schuin) al een 2, dan kan jouw vakje geen 2 zijn. Heeft een gebied van 3 vakjes al een 1 en een 3, dan moet het laatste vakje een 2 zijn.'))),
+sec('Murdoku',E('p',null,'Op een plattegrond van 5×5 vakjes met vijf kamers zet je vijf verdachten. In elke rij en in elke kolom staat precies één verdachte. Je kiest een vakje en daarna de beginletter van de naam. De aanwijzingen vertellen waar iemand zit.'),
+E('div',{class:'ex'},E('b',null,'Voorbeeld'),E('p',null,'Aanwijzingen: "Anna zit in rij 1", "Bram zit in kolom 3", "Cas zit (ergens) links van Anna". Anna staat dus in rij 1. Cas moet links van haar staan, dus Anna staat nooit in kolom 1. Heb je Bram in kolom 3 gezet, dan kan niemand anders meer in kolom 3 staan. Zo schuif je stap voor stap alles op zijn plek.'))),
+sec('Logigram',E('p',null,'Een tabel met plekken en eigenschappen (zoals naam, beroep en kleur). Je kiest bij elke plek en eigenschap het juiste item uit de lijst. Elk item hoort bij precies één plek. De aanwijzingen vertellen welke items bij elkaar horen of waar ze staan.'),
+E('div',{class:'ex'},E('b',null,'Voorbeeld met 3 plekken'),E('p',null,'Aanwijzingen: 1) Anna staat links van Bram. 2) Cas staat direct naast Anna. 3) Cas staat niet op plek 2. 4) Bram is de Kok. 5) Anna is de Arts.'),
+E('p',null,'Uit 1 en 2 volgt dat Cas links of rechts van Anna staat, met Bram rechts van Anna. Cas staat niet op plek 2 (aanwijzing 3), dus Cas staat op plek 1, Anna op plek 2 en Bram op plek 3. Anna is de Arts en Bram is de Kok, dus Cas is de Bakker.'),
+E('table',{class:'lg'},E('tr',null,E('th'),E('th',null,'Naam'),E('th',null,'Beroep')),E('tr',null,E('td',null,'Plek 1'),E('td',null,'Cas'),E('td',null,'Bakker')),E('tr',null,E('td',null,'Plek 2'),E('td',null,'Anna'),E('td',null,'Arts')),E('tr',null,E('td',null,'Plek 3'),E('td',null,'Bram'),E('td',null,'Kok'))),
+E('p',{class:'mu'},'"Staat links van" betekent: ergens links, niet per se direct ernaast. "Direct naast elkaar" betekent: vlak naast elkaar. "Met precies één plek ertussen" betekent dat er één plek tussen zit.'))),
+sec('De som na je puzzel',E('p',null,'Na het afronden krijg je een som die alleen werkt met de opgeloste puzzel. Zo kan niemand de som oplossen zonder de puzzel te maken.'),
+E('div',{class:'ex'},E('b',null,'Voorbeeld (Murdoku)'),E('p',null,'"Kijk bij elke rij welke persoon daar staat. Vermenigvuldig het aantal letters van zijn naam met het nummer van de rij en tel alle vijf de uitkomsten op. Tel daar 17 bij op." Staat in rij 1 Anna (4 letters), dan is dat 1 × 4 = 4. Rij 2 met Cas (3 letters) geeft 2 × 3 = 6. Zo ga je door alle rijen, je telt alles op en daarna doe je de laatste bijtelling of aftrekking. De uitkomst is jouw antwoord.'))),
+sec('De hoofdpuzzel en de laatste som',E('p',null,'De hoofdpuzzel is een groot logigram met 5 categorieën en 6 plekken: lastiger dan het logigram van de oplossers, maar goed op te lossen in ongeveer 10 tot 15 minuten. Daarna volgt een lange som met de antwoorden van alle spelers, getallen uit het logigram ("plek van X") en letteraantallen. In de som komt "mod m" voor: dat is de rest na deling door m. Voer elke stap precies in de volgorde uit.')),
+sec('Tips',E('div',{class:'tip'},E('b',null,'Gebruik kladpapier. '),'Schrijf aanwijzingen, tussenstappen en alle stappen van de sommen op papier.'),
+E('div',{class:'tip'},E('b',null,'Geen rekenmachine. '),'Reken alles zelf uit, ook de lange som. Controleer elke stap twee keer.'),
+E('div',{class:'tip'},E('b',null,'Geen andere telefoon of hulp. '),'Geen zoekmachine, geen AI en geen puzzelsolver. Alleen jullie eigen hersenen en kladpapier.'),
+E('div',{class:'tip'},E('b',null,'Rond pas af als je zeker bent. '),'Afronden kan niet ongedaan worden gemaakt en je krijgt geen goed/fout-melding. Controleer je puzzel dus eerst zelf.'),
+E('div',{class:'tip'},E('b',null,'Werk samen. '),'Help elkaar met rekenen en controleer elkaars antwoorden voordat je ze doorgeeft. Eén fout in één antwoord maakt de kluiscode fout.'),
+E('div',{class:'tip'},E('b',null,'Let op de tijd. '),'Alleen het apparaat van de hoofdpuzzel heeft een klok. Die wordt rood in de laatste 5 minuten.'),
+E('div',{class:'tip'},E('b',null,'Pagina vernieuwd of per ongeluk gesloten? '),'Je voortgang wordt automatisch op dit apparaat bewaard en de klok loopt gewoon door. Open de pagina opnieuw en je zit weer in je spel. Met de knop Stop spel bovenin stop je het spel en wis je de voortgang.')),
+E('button',{class:'pri',on:{click:home}},'Ik heb het begrepen, naar het startscherm'))}
+function home(){clearInterval(S.iv);S={};rmKD();clearSave();put(app,E('div',{class:'logo'},E('b',null,'ESCAPEROOM'),E('small',null,'Puzzelopdracht op tijd')),
+E('div',{class:'card'},E('b',null,'Tijdadvies'),' (bij 2 puzzels per persoon; de tijd schaalt mee met het aantal puzzels per persoon)',E('table',null,TIJDEN.slice().reverse().map(([m,l])=>E('tr',null,E('td',null,m+' min'),E('td',null,l))))),
+E('button',{on:{click:uitleg}},'Uitleg en spelregels'),E('p',null,'Kies je rol:'),E('button',{class:'pri',on:{click:()=>setup('s')}},'Oplossers'),E('button',{class:'pri',on:{click:()=>setup('h')}},'Hoofdpuzzel'))}
+function setup(role){const nm=E('input',{maxLength:20,placeholder:'Naam'}),n=E('input',{type:'number',min:'1',max:'8',value:'2'}),pp=E('input',{type:'number',min:'1',max:'6',value:'3'}),sd=E('input',{inputMode:'numeric',maxLength:6,placeholder:'123456'}),
+tm=E('select',null,TIJDEN.map(([m,l])=>E('option',{value:String(m),selected:m==50},l+' (basis '+m+' min bij 2 per persoon)'))),err=E('div',{class:'err'});
+put(app,E('h2',null,role=='h'?'Hoofdpuzzel':'Oplosser'),role=='h'?E('p',{class:'mu'},'De hoofdpuzzel heeft geen speler. Het apparaat regelt de tijd en lost het grote logigram op.'):E('label',null,'Jouw naam',nm),
+E('label',null,'Aantal spelers',n),E('label',null,'Puzzels per persoon (1–6)',pp),E('p',{class:'mu'},'Gebruik overal dezelfde aantallen, dezelfde seed en dezelfde moeilijkheid. Totaal maximaal 20 puzzels.'),
+E('label',null,'Seed (6 cijfers)',sd),role=='h'?E('button',{on:{click:()=>{sd.value=String(100000+crypto.getRandomValues(new Uint32Array(1))[0]%900000)}}},'Willekeurige seed'):null,
+role=='h'?E('label',null,'Moeilijkheid (tijd schaalt mee met puzzels per persoon)',tm):E('p',{class:'mu'},'De tijd wordt alleen op de hoofdpuzzel bijgehouden. Jij speelt zonder klok.'),
+E('button',{class:'pri',on:{click:()=>go(role,nm.value.trim(),+n.value,+pp.value,sd.value,+tm.value,err)}},'Verder'),err,E('button',{on:{click:home}},'Terug'))}
+function go(role,name,n,pp,sd,time,err){if(role=='s'&&!name)return err.textContent='Vul je naam in.';
+if(!/^\d{6}$/.test(sd)||!(n>=1&&n<=8)||!(pp>=1&&pp<=6))return err.textContent='Vul 1–8 spelers, 1–6 puzzels per persoon en een seed van 6 cijfers in.';
+if(n*pp>20)return err.textContent='Maximaal 20 puzzels in totaal (spelers × puzzels per persoon).';
+time=Math.round(time*pp/2);
+S={role,n,pp,seed:+sd,time,ok:{},val:{},cache:{},kl:{},name,mine:[]};
+// willekeurig schema per seed; elk type komt minstens één keer voor (als er 4+ puzzels zijn)
+const RT=rng(S.seed*7+13);S.pz=shuf([...Array(n*pp)].map((_,i)=>i<4?i:RT()*4|0),RT);
+const chosen=new Set(),el=E('div',{class:'err'});
+const list=S.pz.map((t,i)=>{const cb=E('input',{type:'checkbox',on:{change:()=>{if(cb.checked&&chosen.size>=pp){cb.checked=false;el.textContent=`Je kunt maar ${pp} puzzel(s) kiezen.`;return}el.textContent='';cb.checked?chosen.add(i):chosen.delete(i)}}});return E('label',{class:'pk'},cb,`Puzzel ${i+1} – ${TY[t]} (±10–15 min)`)});
+const start=()=>{if(role=='s'){if(chosen.size!=pp)return el.textContent=`Kies precies ${pp} puzzel(s).`;S.mine=[...chosen].sort((x,y)=>x-y)}begin()};
+put(app,E('h2',null,'Lobby – seed '+sd),name?E('p',null,'Speler: ',E('b',null,name)):null,
+role=='s'?E('p',null,`Schema: ${n} speler(s) × ${pp} = ${n*pp} puzzels. Overleg wie welke puzzels doet. Kies jouw ${pp} puzzel(s); de rest kiezen de andere spelers. Na het starten zie je alleen jouw eigen puzzels.`):E('p',null,`${n} speler(s) × ${pp} = ${n*pp} puzzels. De spelers kiezen elk ${pp} puzzel(s) op hun eigen apparaat. Daarnaast: de hoofdpuzzel (groot logigram met eindberekening).`),
+role=='s'?E('div',null,list):E('ol',null,S.pz.map(t=>E('li',null,E('b',null,TY[t]),' (±10–15 min)'))),
+role=='h'?E('p',null,'Tijd: ',E('b',null,time+' min')):null,E('button',{class:'pri',on:{click:start}},role=='h'?'Start (de tijd begint)':'Start'),el)}
+function begin(){S.started=1;if(S.role=='h'){S.end=Date.now()+S.time*60000;S.iv=setInterval(tick,250);host()}else play();save()}
+let AC=null,MUTE=false;
+function tk(h){if(MUTE)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain(),n=AC.currentTime;o.type='square';o.frequency.value=h?1300:900;g.gain.setValueAtTime(.06,n);g.gain.exponentialRampToValueAtTime(.0001,n+.05);o.connect(g);g.connect(AC.destination);o.start(n);o.stop(n+.06)}catch(e){}}
+function tick(){const t=Math.max(0,S.end-Date.now()),e=S.tmEl;if(e){e.textContent=String(t/60000|0).padStart(2,'0')+':'+String(t/1000%60|0).padStart(2,'0');e.style.color=t<300000?'var(--r)':''}
+const sec=Math.ceil(t/1000);if(t>0&&!S.over&&sec!=S.ls){S.ls=sec;tk(sec%2)}
+if(!t&&!S.over){S.over=1;clearInterval(S.iv);clearSave();ov('Tijd is op')}}
+function play(){S.tabsEl=E('div');S.pv=E('div');put(app,E('div',{class:'bar'},E('span',null,S.name),stopBtn()),S.tabsEl,S.pv);openP(S.cur!=null&&S.mine.includes(S.cur)?S.cur:S.mine[0])}
+function tabs(){put(S.tabsEl,S.mine.map(i=>E('button',{class:'tab'+(S.cur==i?' on':''),on:{click:()=>openP(i)}},`${i+1} ${TY[S.pz[i]]}`+(S.ok[i]?' ✓':''))))}
+function openP(i){S.cur=i;tabs();const pv=S.pv;put(pv,'Puzzel wordt gemaakt…');setTimeout(()=>{if(S.pv===pv)buildP(i)},30)}
+function buildP(i){const t=S.pz[i],R=rng(S.seed*131+i*7919+1),p=S.cache[i]||(S.cache[i]=restore(i,[mkSudoku,mkTect,mkMur,mkLog][t](R))),pv=S.pv,lock=!!S.ok[i];
+const done=m=>{S.ok[i]=1;save();put(m,somCard(i,t,p));tabs()};
+if(t==0){p.vals=p.vals||p.g.slice();gridUI(pv,{cols:9,vals:p.vals,fx:p.g,sol:p.sol,max:9,w:40,done,locked:lock,bd:(r,c)=>[r%3==0,c%3==2,r%3==2,c%3==0]})}
+else if(t==1){p.vals=p.vals||p.g.slice();const g=p.reg;gridUI(pv,{cols:7,vals:p.vals,fx:p.g,sol:p.sol,max:5,w:44,done,locked:lock,
+bd:(r,c)=>{const q=r*7+c;return[r==0||g[q-7]!=g[q],c==6||g[q+1]!=g[q],r==6||g[q+7]!=g[q],c==0||g[q-1]!=g[q]]}})}
+else if(t==2){p.vals=p.vals||Array(25).fill(0);const gr=E('div');
+put(pv,E('p',null,`Zet elke verdachte in de plattegrond: in elke rij en kolom staat precies één persoon. Kies een vakje en dan een letter (${NM.map(n=>n[0]+'='+n).join(', ')}).`),
+E('ul',null,p.clues.map(c=>E('li',null,c))),E('p',null,RN.map((n,k)=>E('span',{class:'leg',style:{borderLeft:`12px solid hsl(${(65+k)*50}deg 55% 65%)`}},n))),gr);
+gridUI(gr,{cols:5,vals:p.vals,sol:p.sol,max:5,w:60,done,locked:lock,sh:x=>NM[x-1][0],bg:(r,c)=>`hsl(${RM[r].charCodeAt(c)*50}deg 55% 90%)`,bd:()=>[0,0,0,0]})}
+else{const lt=E('div');put(pv,E('ol',null,p.clues.map(c=>E('li',null,c))),lt);logTable(lt,p,{done,locked:lock})}}
+function row(i){const el=S.rowEls[i];let c;
+if(S.ok[i])c=E('div',null,'Antwoord ',E('input',{class:'ci',value:String(S.val[i]),readOnly:true}),' vastgelegd');
+else{const inp=E('input',{class:'ci',maxLength:4,inputMode:'numeric'});
+c=E('div',null,'Antwoord van de speler ',inp,E('button',{on:{click:()=>{if(!/^\d+$/.test(inp.value))return;S.val[i]=inp.value;S.ok[i]=1;save();row(i);if(S.pz.every((_,k)=>S.ok[k]))showCalc()}}},'Bevestig'))}
+put(el,E('b',null,`Puzzel ${i+1} – ${TY[S.pz[i]]}`),c)}
+function showAns(){if(S.ph)return;S.ph=1;put(S.ansEl,E('h3',null,'Antwoorden van de spelers'),E('p',{class:'mu'},'Elke speler geeft nu het antwoord van de som van zijn puzzels door. Voer ze hier in. Je krijgt geen melding of een antwoord klopt. Een bevestigd antwoord staat vast. Pas als alle antwoorden zijn ingevoerd verschijnt de laatste som.'),E('div',null,S.rowEls))}
+function showCalc(){if(S.ph2)return;S.ph2=1;const b=S.big,fc=E('input',{maxLength:6,inputMode:'numeric'}),fe=E('div',{class:'err'});
+put(S.calcEl,E('h3',null,'Laatste som – kluiscode'),E('div',{class:'card'},E('p',null,'Gebruik de antwoorden van de spelers en de oplossing van de hoofdpuzzel. Voer de stappen strikt in volgorde uit. "plek van X" is het pleknummer (1–6) van X in de hoofdpuzzel. "aantal letters van X" is het aantal letters van het woord X. "mod m" betekent: de rest na deling door m.'),
+E('table',null,S.pz.map((_,i)=>E('tr',null,E('td',null,`P${i+1}`),E('td',null,S.val[i]))))),
+E('div',{class:'card'},E('table',null,b.steps.map(x=>E('tr',null,E('td',null,x))))),
+E('label',null,'Kluiscode (6 cijfers)',fc),E('button',{class:'pri',on:{click:()=>{if(fc.value==b.fin){fc.readOnly=true;S.over=1;clearInterval(S.iv);clearSave();const t=Math.max(0,S.end-Date.now());ov('Ontsnapt',E('br'),`Tijd over: ${t/60000|0}:${String(t/1000%60|0).padStart(2,'0')}`)}else fe.textContent='Onjuiste kluiscode.'}}},'Bevestig'),fe)}
+function host(){S.tmEl=E('b');S.rowEls=S.pz.map(()=>E('div',{class:'card'}));S.ansEl=E('div');S.calcEl=E('div');const big=E('div',{class:'mu'},'Bezig met genereren…');
+put(app,E('div',{class:'bar'},E('span',null,'Hoofdpuzzel',stopBtn()),E('span',null,E('button',{on:{click:e=>{MUTE=!MUTE;e.target.textContent=MUTE?'Geluid aan':'Geluid uit'}}},'Geluid uit'),'Resterende tijd ',S.tmEl)),
+E('h3',null,'Hoofdpuzzel – logigram'),big,S.ansEl,S.calcEl);S.pz.forEach((_,i)=>row(i));
+const sv=S;setTimeout(()=>{if(S!==sv)return;const b=S.bigSv||mkBig(rng(S.seed*131+99991),S.pz.length),bt=E('div');S.big=b;save();big.className='';
+put(big,E('div',{class:'card'},'Vijf categorieën (plek, naam, beroep, kleur en huisdier) met elk zes items. Plek 1 staat links en plek 6 rechts. Elk item hoort bij precies één plek. Zoek bij elke plek het juiste item. Rond de puzzel pas af als je zeker bent: daarna volgen de antwoorden van de spelers en de laatste som.'),E('ol',null,b.clues.map(c=>E('li',null,c))),bt);
+logTable(bt,b,{locked:!!S.bigDone,done:m=>{S.bigDone=1;save();put(m,'Hoofdpuzzel afgerond.');showAns();if(S.pz.every((_,k)=>S.ok[k]))showCalc()}})},40)}
+/* ---------- opslaan, herstellen en stoppen ---------- */
+const KEY='escaperoom-save-v1';
+function snap(){const pr=Object.assign({},S.prog||{});for(const i in S.cache){const p=S.cache[i];pr[i]={vals:p.vals||null,sel:p.sel||null}}
+return{role:S.role,n:S.n,pp:S.pp,seed:S.seed,time:S.time,end:S.end,ok:S.ok,val:S.val,name:S.name,mine:S.mine,pz:S.pz,cur:S.cur,bigDone:S.bigDone,big:S.big||S.bigSv||null,prog:pr}}
+function save(){if(!S.started||S.over)return;try{localStorage.setItem(KEY,JSON.stringify(snap()))}catch(e){}}
+function clearSave(){try{localStorage.removeItem(KEY)}catch(e){}}
+function restore(i,p){const sv=S.prog&&S.prog[i];if(sv){if(sv.vals&&sv.vals.length)p.vals=sv.vals;if(sv.sel&&sv.sel.length)p.sel=sv.sel}return p}
+function stopBtn(){return E('button',{class:'sm',on:{click:askStop}},'Stop spel')}
+function askStop(){if($('.md'))return;const m=E('div',{class:'md'},E('div',{class:'card'},E('b',null,'Weet je zeker dat je het spel wilt stoppen?'),E('p',null,'Je voortgang op dit apparaat wordt gewist. Dit kan niet ongedaan worden gemaakt.'),
+E('button',{class:'pri dg',on:{click:()=>{m.remove();home()}}},'Ja, stop het spel'),E('button',{class:'pri sec',on:{click:()=>m.remove()}},'Nee, verder spelen')));document.body.append(m)}
+setInterval(save,1500);addEventListener('pagehide',save);document.addEventListener('visibilitychange',()=>{if(document.hidden)save()});
+function boot(){let d=null;try{d=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){}
+if(d&&Array.isArray(d.pz)&&d.seed&&(d.role=='s'||d.role=='h')&&(d.role=='s'||d.end>Date.now())){
+S={role:d.role,n:d.n,pp:d.pp,seed:d.seed,time:d.time,end:d.end,ok:d.ok||{},val:d.val||{},cache:{},kl:{},name:d.name,mine:d.mine||[],pz:d.pz,cur:d.cur,bigDone:d.bigDone,bigSv:d.big,prog:d.prog||{},started:1};
+if(S.role=='h'){S.iv=setInterval(tick,250);host()}else play();return}
+clearSave();uitleg()}
+boot();
+</script></body></html>
