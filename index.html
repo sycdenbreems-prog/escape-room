@@ -26,9 +26,10 @@ ul,ol{padding-left:22px}li{margin:3px 0}#msg{margin-top:10px;font-weight:600}
 .mu{color:var(--mu);font-size:14px}.err{color:var(--r);font-weight:600}.lg select{padding:6px 2px;font-size:13px}.lg td,.lg th{padding:4px 2px;border:0}.lg th{font-size:12px;color:var(--mu);font-weight:600}select:disabled,input:read-only{background:#f1f3f7;color:var(--t)}
 .leg{padding:2px 6px;margin-right:8px}.msg{margin-top:10px;font-weight:600}.pk{display:block;margin:6px 0;text-transform:none;letter-spacing:0;font-size:15px;color:var(--t);font-weight:500}input[type=checkbox]{width:auto;margin:0 8px 0 0}
 details{background:#fff;border:1px solid var(--l);border-radius:6px;padding:10px 16px;margin:0 0 10px}summary{cursor:pointer;font-weight:600;padding:4px 0}details[open] summary{margin-bottom:8px;color:var(--a)}.ex{background:#f3f5f9;border-left:3px solid var(--a);padding:8px 12px;margin:10px 0;font-size:14px}.tip{background:#fff7e6;border-left:3px solid #d9822b;padding:8px 12px;margin:10px 0;font-size:14px}
+.pt{border-collapse:collapse;margin:8px auto;width:auto}.pt td,.pt th{border:1px solid #98a2b3;padding:6px 12px;text-align:center}.pt th{background:#f3f5f9}.cap{text-align:center;color:var(--mu);font-size:13px;margin:2px 0 10px}.pics{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;align-items:flex-start}.pics>div{text-align:center}.ex ol{margin:8px 0}
 </style></head><body><div id="app"></div><script>
 const $=s=>document.querySelector(s),app=$('#app');
-const TY=['Sudoku','Tectonic','Murdoku','Logigram'];let S={};
+const TY=['Sudoku','Tectonic','Logigram','Binairo','Nonogram','Killer','Wolkenkrabbers','Futoshiki'];let S={};
 function rng(s){return()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 const shuf=(a,R)=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=R()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
 const codeOf=i=>10+(rng(S.seed*977+i*31+5)()*90|0);
@@ -41,7 +42,7 @@ const PM=[];(function pm(a,r){if(!r.length){PM.push(a);return}r.forEach((v,i)=>p
 function mkSudoku(R){const ok=(g,p,v)=>{const r=p/9|0,c=p%9,br=r-r%3,bc=c-c%3;for(let k=0;k<9;k++)if(g[r*9+k]==v||g[k*9+c]==v||g[(br+(k/3|0))*9+bc+k%3]==v)return 0;return 1};
 const cd=(g,p)=>{const o=[];for(let v=1;v<10;v++)if(ok(g,p,v))o.push(v);return o};
 const sol=Array(81).fill(0);ds(sol,cd,1,R);const g=sol.slice();let k=0;
-for(const p of shuf([...Array(81).keys()],R)){if(k>=51)break;const v=g[p];g[p]=0;if(ds(g.slice(),cd,2)==1)k++;else g[p]=v}return{sol,g}}
+for(const p of shuf([...Array(81).keys()],R)){if(k>=46)break;const v=g[p];g[p]=0;if(ds(g.slice(),cd,2)==1)k++;else g[p]=v}return{sol,g}}
 function mkTect(R){const W=7,H=7,n=49;for(;;){const reg=Array(n).fill(-1);let nr=0;
 for(const s of shuf([...Array(n).keys()],R)){if(reg[s]>=0)continue;const id=nr++;reg[s]=id;const cl=[s],t=2+(R()*4|0);
 while(cl.length<t){const f=[];cl.forEach(c=>nb(c,W,H,0).forEach(d=>{if(reg[d]<0)f.push(d)}));if(!f.length)break;const d=f[R()*f.length|0];reg[d]=id;cl.push(d)}}
@@ -50,15 +51,64 @@ const cd=(g,i)=>{const o=[];for(let v=1;v<=sz[reg[i]];v++)if(!nbs[i].some(j=>g[j
 const sol=Array(n).fill(0);if(!ds(sol,cd,1,R))continue;const g=sol.slice();let k=0;
 for(const p of shuf([...Array(n).keys()],R)){if(k>=33)break;const v=g[p];g[p]=0;if(ds(g.slice(),cd,2)==1)k++;else g[p]=v}
 return{reg,sol,g}}}
-const RM=['AABBB','ACCBB','DCCEE','DDCEE','DDDEE'],RN=['Keuken','Studeerkamer','Salon','Bibliotheek','Tuin'],NM=['Anna','Bram','Cas','Dora','Eli'];
-function mkMur(R){const rm=(r,c)=>RM[r].charCodeAt(c)-65,rw=(x,i)=>PM[x[0]][i],cl=(x,i)=>PM[x[1]][i],N=NM,sol=[R()*120|0,R()*120|0];
-let L=[];for(let a=0;a<120;a++)for(let b=0;b<120;b++)L.push([a,b]);const clues=[],room=(x,s)=>rm(rw(x,s),cl(x,s));
-for(let it=0;it<5000&&L.length>1;it++){const s=R()*5|0,t=R()*5|0,k=R()*5|0,r=R()*5|0,ty=R()*7|0;let f,tx;
-if(ty==0){f=x=>room(x,s)==k;tx=`${N[s]} zit in de ${RN[k]}`}else if(ty==1){f=x=>room(x,s)!=k;tx=`${N[s]} zit niet in de ${RN[k]}`}
-else if(ty==2){f=x=>rw(x,s)==r;tx=`${N[s]} zit in rij ${r+1}`}else if(ty==3){f=x=>cl(x,s)==r;tx=`${N[s]} zit in kolom ${r+1}`}
-else{if(s==t)continue;if(ty==4){f=x=>cl(x,s)<cl(x,t);tx=`${N[s]} zit (ergens) links van ${N[t]}`}else if(ty==5){f=x=>rw(x,s)<rw(x,t);tx=`${N[s]} zit (ergens) boven ${N[t]}`}else{f=x=>room(x,s)==room(x,t);tx=`${N[s]} en ${N[t]} zitten in dezelfde kamer`}}
-if(!f(sol))continue;const M=L.filter(f);if(M.length<L.length){L=M;clues.push(tx)}}
-const g=Array(25).fill(0);for(let i=0;i<5;i++)g[rw(sol,i)*5+cl(sol,i)]=i+1;return{sol:g,clues}}
+const NM=['Anna','Bram','Cas','Dora','Eli'];
+const latOK=(g,p,v,N)=>{const r=p/N|0,c=p%N;for(let k=0;k<N;k++)if(g[r*N+k]==v||g[k*N+c]==v)return 0;return 1};
+const latSol=(R,N)=>{const sol=Array(N*N).fill(0);ds(sol,(g,p)=>{const o=[];for(let v=1;v<=N;v++)if(latOK(g,p,v,N))o.push(v);return o},1,R);return sol};
+function mkBin(R){const N=6,n=36,cd=(g,p)=>{const r=p/N|0,c=p%N,o=[];
+for(let v=1;v<3;v++){let a=0,b=0;for(let k=0;k<N;k++){if(k!=c&&g[r*N+k]==v)a++;if(k!=r&&g[k*N+c]==v)b++}if(a>2||b>2)continue;
+let bad=0;for(let s=-2;s<=0;s++){let h=0,w=0;for(let q=0;q<3;q++){const x=c+s+q,y=r+s+q;if(x==c||(x>=0&&x<N&&g[r*N+x]==v))h++;if(y==r||(y>=0&&y<N&&g[y*N+c]==v))w++}if(h==3||w==3)bad=1}
+if(!bad)o.push(v)}return o};
+const sol=Array(n).fill(0);ds(sol,cd,1,R);const g=sol.slice();let k=0;
+for(const p of shuf([...Array(n).keys()],R)){if(k>=20)break;const v=g[p];g[p]=0;if(ds(g.slice(),cd,2)==1)k++;else g[p]=v}return{sol,g}}
+function mkNon(R){const N=6,runs=a=>{const o=[];let k=0;for(const x of a){if(x)k++;else if(k){o.push(k);k=0}}if(k)o.push(k);return o},eq=(a,b)=>a.length==b.length&&a.every((x,i)=>x==b[i]);
+const masks=[...Array(1<<N).keys()].map(m=>[...Array(N).keys()].map(i=>m>>i&1));
+for(;;){const sol=[...Array(N*N)].map(()=>R()<.55?1:0),row=r=>sol.slice(r*N,r*N+N),col=c=>[...Array(N).keys()].map(r=>sol[r*N+c]);
+const rc=[...Array(N).keys()].map(r=>runs(row(r))),cc=[...Array(N).keys()].map(c=>runs(col(c)));if(rc.some(x=>!x.length)||cc.some(x=>!x.length))continue;
+const pats=rc.map(cl=>masks.filter(m=>eq(runs(m),cl)));let cnt=0;const pl=[];
+const ok=(c,fin)=>{const b=pl.map(m=>m[c]),r=runs(b),cl=cc[c];if(fin)return eq(r,cl);const open=b[b.length-1]==1;for(let i=0;i<r.length;i++){if(i>=cl.length)return false;if(i==r.length-1&&open){if(r[i]>cl[i])return false}else if(r[i]!=cl[i])return false}return true};
+const rec=r=>{if(cnt>1)return;if(r==N){cnt++;return}for(const m of pats[r]){pl.push(m);let g=1;for(let c=0;c<N&&g;c++)if(!ok(c,r==N-1))g=0;if(g)rec(r+1);pl.pop()}};rec(0);
+if(cnt==1)return{sol,rc,cc}}}
+function mkKil(R){const N=5,n=25,nbs=[...Array(n).keys()].map(i=>nb(i,N,N,0));
+for(;;){const reg=Array(n).fill(-1);let nr=0;
+for(const s of shuf([...Array(n).keys()],R)){if(reg[s]>=0)continue;const id=nr++;reg[s]=id;const cl=[s],t=2+(R()*2|0);
+while(cl.length<t){const f=[];cl.forEach(c=>nbs[c].forEach(d=>{if(reg[d]<0)f.push(d)}));if(!f.length)break;const d=f[R()*f.length|0];reg[d]=id;cl.push(d)}}
+const cages=Array.from({length:nr},()=>[]);reg.forEach((r,i)=>cages[r].push(i));
+const sol=latSol(R,N),tg=cages.map(l=>l.reduce((a,i)=>a+sol[i],0));
+const cd=(g,p)=>{const o=[],l=cages[reg[p]],T=tg[reg[p]];let s=0,e=0;l.forEach(i=>{if(i!=p){if(g[i])s+=g[i];else e++}});
+for(let v=1;v<=N;v++)if(latOK(g,p,v,N)&&s+v+e<=T&&s+v+N*e>=T)o.push(v);return o};
+const g=Array(n).fill(0);let tr=0;
+while(ds(g.slice(),cd,2)!=1&&tr++<12){const e=[...Array(n).keys()].filter(i=>!g[i]);const p=e[R()*e.length|0];g[p]=sol[p]}
+if(ds(g.slice(),cd,2)!=1)continue;
+for(const p of shuf([...Array(n).keys()],R)){if(!g[p])continue;const v=g[p];g[p]=0;if(ds(g.slice(),cd,2)!=1)g[p]=v}
+const tag=Array(n).fill('');cages.forEach((l,k)=>{tag[Math.min(...l)]=String(tg[k])});
+return{reg,tag,sol,g}}}
+function mkSky(R){const N=5,n=25,vis=a=>{let m=0,c=0;for(const x of a)if(x>m){m=x;c++}return c},row=(g,r)=>g.slice(r*N,r*N+N),col=(g,c)=>[...Array(N).keys()].map(r=>g[r*N+c]);
+const sol=latSol(R,N),cl={L:[],R:[],T:[],B:[]};
+for(let k=0;k<N;k++){cl.L[k]=vis(row(sol,k));cl.R[k]=vis(row(sol,k).reverse());cl.T[k]=vis(col(sol,k));cl.B[k]=vis(col(sol,k).reverse())}
+const mk=c=>(g,p)=>{const r=p/N|0,cc=p%N,o=[];for(let v=1;v<=N;v++){if(!latOK(g,p,v,N))continue;g[p]=v;let ok=1;const rw=row(g,r);
+if(rw.every(x=>x)&&((c.L[r]&&vis(rw)!=c.L[r])||(c.R[r]&&vis(rw.slice().reverse())!=c.R[r])))ok=0;
+const cw=col(g,cc);if(ok&&cw.every(x=>x)&&((c.T[cc]&&vis(cw)!=c.T[cc])||(c.B[cc]&&vis(cw.slice().reverse())!=c.B[cc])))ok=0;g[p]=0;if(ok)o.push(v)}return o};
+const g=Array(n).fill(0),un=()=>ds(g.slice(),mk(cl),2)==1;let tr=0;
+while(!un()&&tr++<12){const e=[...Array(n).keys()].filter(i=>!g[i]);const p=e[R()*e.length|0];g[p]=sol[p]}
+const keys=[];['L','R','T','B'].forEach(s=>{for(let k=0;k<N;k++)keys.push([s,k])});const t0=performance.now();let left=keys.length;
+for(const [s,k] of shuf(keys,R)){if(left<=9||performance.now()-t0>3000)break;const v=cl[s][k];cl[s][k]=0;if(un())left--;else cl[s][k]=v}
+for(const p of shuf([...Array(n).keys()],R)){if(!g[p]||performance.now()-t0>3500)continue;const v=g[p];g[p]=0;if(!un())g[p]=v}
+const G=Array(49).fill(0),F=Array(49).fill(true);
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const q=(r+1)*7+c+1;G[q]=g[r*N+c];F[q]=!!g[r*N+c]}
+for(let k=0;k<N;k++){G[k+1]=cl.T[k];G[42+k+1]=cl.B[k];G[(k+1)*7]=cl.L[k];G[(k+1)*7+6]=cl.R[k]}
+return{g:G,fx:F,si:sol}}
+function mkFut(R){const N=5,n=25,sol=latSol(R,N),all=[];
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const i=r*N+c;if(c<N-1)all.push(sol[i]<sol[i+1]?{a:i,b:i+1}:{a:i+1,b:i});if(r<N-1)all.push(sol[i]<sol[i+N]?{a:i,b:i+N}:{a:i+N,b:i})}
+const mk=cons=>{const by=Array.from({length:n},()=>[]);cons.forEach(k=>{by[k.a].push(k);by[k.b].push(k)});
+return(g,p)=>{const o=[];for(let v=1;v<=N;v++){if(!latOK(g,p,v,N))continue;let ok=1;for(const k of by[p]){const x=k.a==p?v:g[k.a],y=k.b==p?v:g[k.b];if(x&&y&&x>=y){ok=0;break}}if(ok)o.push(v)}return o}};
+let cons=all.slice();const g=Array(n).fill(0),un=()=>ds(g.slice(),mk(cons),2)==1;let tr=0;
+while(!un()&&tr++<12){const e=[...Array(n).keys()].filter(i=>!g[i]);const p=e[R()*e.length|0];g[p]=sol[p]}
+const t0=performance.now(),pool=shuf([...cons.map(k=>({k})),...[...Array(n).keys()].filter(i=>g[i]).map(p=>({p}))],R);
+for(const it of pool){if(performance.now()-t0>3500)break;if(it.k){const old=cons;cons=cons.filter(x=>x!==it.k);if(!un())cons=old}else{const v=g[it.p];g[it.p]=0;if(!un())g[it.p]=v}}
+const G=Array(81).fill(0),F=Array(81).fill(true),SL=Array(81).fill(0);
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const q=2*r*9+2*c;G[q]=g[r*N+c];F[q]=!!g[r*N+c];SL[q]=sol[r*N+c]}
+cons.forEach(k=>{const {a,b}=k,m=Math.min(a,b),r=m/N|0,c=m%N;if(Math.abs(a-b)==1)G[2*r*9+2*c+1]=a<b?'<':'>';else G[(2*r+1)*9+2*c]=a<b?'∧':'∨'});
+return{g:G,fx:F,sol:SL}}
 function mkLog(R){const C=[['Plek 1','Plek 2','Plek 3','Plek 4','Plek 5'],NM,['Bakker','Arts','Pilot','Kok','Chauffeur'],['Rood','Blauw','Groen','Geel','Wit']];
 const T=14400*120,X=new Uint8Array(T),Y=new Uint8Array(T),Z=new Uint8Array(T);let q=0;for(let a=0;a<120;a++)for(let b=0;b<120;b++)for(let c=0;c<120;c++){X[q]=a;Y[q]=b;Z[q++]=c}
 const sa=R()*120|0,sb=R()*120|0,sc=R()*120|0,pos=(x,y,z,k,i)=>k?PM[[0,x,y,z][k]][i]:i;let L=T;const clues=[];
@@ -68,8 +118,8 @@ if(!f(sa,sb,sc))continue;let n=0;for(let q=0;q<L;q++)if(f(X[q],Y[q],Z[q]))n++;if
 let w=0;for(let q=0;q<L;q++)if(f(X[q],Y[q],Z[q])){X[w]=X[q];Y[w]=Y[q];Z[w]=Z[q];w++}L=w;
 const A=C[k][i],B=C[l][j];clues.push(ty==0?`${A} hoort bij ${B}`:ty==1?`${A} hoort niet bij ${B}`:ty==2?`${A} en ${B} staan direct naast elkaar`:`${A} staat (ergens) links van ${B}`)}
 return{C,CN:['Naam','Beroep','Kleur'],clues,sol:[PM[sa],PM[sb],PM[sc]]}}
-function mkBig(R,n){const K=7,M=8,NV=K*M,CN=['Naam','Beroep','Kleur','Huisdier','Drank','Hobby'],
-C=[['Plek 1','Plek 2','Plek 3','Plek 4','Plek 5','Plek 6','Plek 7','Plek 8'],['Anna','Bram','Cas','Dora','Eli','Fenna','Gijs','Hanna'],['Bakker','Arts','Piloot','Kok','Chauffeur','Leraar','Schilder','Timmerman'],['Rood','Blauw','Groen','Geel','Wit','Zwart','Oranje','Roze'],['Hond','Kat','Vogel','Vis','Konijn','Slang','Hamster','Papegaai'],['Thee','Koffie','Melk','Cola','Water','Wijn','Sap','Bier'],['Schaken','Tennis','Koken','Lezen','Zwemmen','Tekenen','Fietsen','Schaatsen']];
+function mkBig(R,n){const K=5,M=6,NV=K*M,CN=['Naam','Beroep','Kleur','Huisdier'],
+C=[['Plek 1','Plek 2','Plek 3','Plek 4','Plek 5','Plek 6'],['Anna','Bram','Cas','Dora','Eli','Fenna'],['Bakker','Arts','Piloot','Kok','Chauffeur','Leraar'],['Rood','Blauw','Groen','Geel','Wit','Zwart'],['Hond','Kat','Vogel','Vis','Konijn','Slang']];
 const sol=C.map((_,k)=>k?shuf([...Array(M).keys()],R):[...Array(M).keys()]);
 const P=v=>sol[(v/M)|0][v%M],lab=v=>C[(v/M)|0][v%M],al=(t,a,b)=>t==0?a==b:t==1?a!=b:t==2?Math.abs(a-b)==1:t==3?a<b:t==4?Math.abs(a-b)!=1:Math.abs(a-b)==2;
 const pc=x=>{let c=0;while(x){x&=x-1;c++}return c};
@@ -87,23 +137,22 @@ const add=()=>{const k=R()*K|0,l=R()*K|0;if(k==l)return 0;const a=k*M+(R()*M|0),
 if(!al(t,P(a),P(b)))return 0;const key=a+','+b+','+t;if(seen.has(key))return 0;seen.add(key);cons.push({a,b,t});return 1};
 let g=0,uq=0;while(g++<40&&!uq){for(let j=0;j<10;)j+=add();uq=count(cons,2)==1}
 if(!uq)for(let v=M;v<NV;v++)cons.push({a:v,b:P(v),t:0});
-const t0=performance.now();for(const c of shuf(cons,R)){if(performance.now()-t0>4000)break;const i=cons.indexOf(c);cons.splice(i,1);if(count(cons,2)!=1)cons.splice(i,0,c)}
+const t0=performance.now(),rem=[];for(const c of shuf(cons,R)){if(performance.now()-t0>4000)break;const i=cons.indexOf(c);cons.splice(i,1);if(count(cons,2)!=1)cons.splice(i,0,c);else rem.push(c)}shuf(rem,R).slice(0,4).forEach(c=>cons.push(c));
 const tx=c=>{const A=lab(c.a),B=lab(c.b);return[`${A} hoort bij ${B}`,`${A} hoort niet bij ${B}`,`${A} en ${B} staan direct naast elkaar`,`${A} staat links van ${B} (niet per se direct)`,`${A} en ${B} staan niet direct naast elkaar`,`${A} en ${B} staan met precies één plek ertussen`][c.t]};
 const clues=shuf(cons,R).map(tx);
 const base=[];for(let j=0;j<n;j++)base.push({l:`P${j+1}`,v:codeOf(j)});
 const vs=shuf([...Array(NV-M).keys()].map(x=>x+M),R);
 vs.slice(0,8).forEach(v=>base.push({l:`plek van ${lab(v)}`,v:P(v)+1}));
 vs.slice(8,13).forEach(v=>base.push({l:`aantal letters van ${lab(v)}`,v:lab(v).length}));
-const B=shuf(base,R),ops=['×','+','−','×','+','²','−','+'],st=[],MD=999983,nmOf=i=>i<26?String.fromCharCode(65+i):String.fromCharCode(64+(i/26|0))+String.fromCharCode(65+i%26);
-let acc=B[0].v,nm=B[0].l;
-for(let i=1;i<B.length;i++){const L=nmOf(i-1),b=B[i],op=ops[(i-1)%ops.length];let x,s;
-if(op=='×'){x=acc*b.v%MD;s=`${L} = (${nm} × ${b.l}) mod ${MD}`}
-else if(op=='²'){x=(acc*acc+b.v)%MD;s=`${L} = (${nm} × ${nm} + ${b.l}) mod ${MD}`}
-else if(op=='+'){x=acc+b.v;s=`${L} = ${nm} + ${b.l}`}
-else if(acc<b.v){x=b.v-acc;s=`${L} = ${b.l} − ${nm}`}else{x=acc-b.v;s=`${L} = ${nm} − ${b.l}`}
-st.push(s);acc=x;nm=L}
-st.push(`Kluiscode = (${nm} mod 900000) + 100000`);
-return{C,CN,clues,sol:sol.slice(1),steps:st,fin:String(acc%900000+100000)}}
+const B=shuf(base,R),st=[],nmOf=i=>i<26?String.fromCharCode(65+i):String.fromCharCode(64+(i/26|0))+String.fromCharCode(65+i%26);
+let acc=B[0].v,nm=B[0].l,mul=0;
+for(let i=1;i<B.length;i++){const L=nmOf(i-1),b=B[i];let s;
+if(b.v<10&&acc*b.v<=3000&&mul++%2==0){acc=acc*b.v;s=`${L} = ${nm} × ${b.l}`}
+else if(b.v<acc&&R()<.3){acc=acc-b.v;s=`${L} = ${nm} − ${b.l}`}
+else{acc=acc+b.v;s=`${L} = ${nm} + ${b.l}`}
+st.push(s);nm=L}
+st.push(`Kluiscode = ${nm}`);
+return{C,CN,clues,sol:sol.slice(1),steps:st,fin:String(acc)}}
 /* ---------- veilige DOM-helpers (geen innerHTML) ---------- */
 const E=(t,a,...k)=>{const e=document.createElement(t);for(const x in a||{}){const v=a[x];
 if(x=='class')e.className=v;else if(x=='on')for(const ev in v)e.addEventListener(ev,v[ev]);else if(x=='style')Object.assign(e.style,v);else e[x]=v}
@@ -113,92 +162,167 @@ let KD=null;const rmKD=()=>{if(KD)document.removeEventListener('keydown',KD);KD=
 /* ---------- afronden + som ---------- */
 function fin(msg,go){return E('button',{class:'pri',on:{click:()=>put(msg,E('div',{class:'card'},E('b',null,'Weet je zeker dat je deze puzzel wilt afronden?'),E('p',null,'Dit kan niet ongedaan worden gemaakt.'),E('button',{class:'pri',on:{click:go}},'Ja, afronden'),E('button',{on:{click:()=>put(msg)}},'Nee, terug')))}},'Puzzel afronden')}
 // De som is alleen uit te rekenen met de opgeloste puzzel. Het antwoord is de code van de puzzel.
-function somCard(i,t,p){const R=rng(S.seed*271+i*13+7),code=codeOf(i);let base=0,tx;
-if(t<2){const W=t?7:9,c=shuf([...p.g.keys()].filter(x=>!p.g[x]),R).slice(0,8).sort((a,b)=>a-b);c.forEach(x=>base+=p.sol[x]);
-tx=`Tel de cijfers op die in deze vakjes staan (rij, kolom): ${c.map(x=>`(${(x/W|0)+1},${x%W+1})`).join('  ')}.`}
-else if(t==2){const bc=R()<.5;for(let r=0;r<5;r++){const q=p.sol.findIndex((v,x)=>v&&(bc?x%5:x/5|0)==r);base+=(r+1)*NM[p.sol[q]-1].length}
-tx=`Kijk bij elke ${bc?'kolom':'rij'} welke persoon daar staat. Vermenigvuldig het aantal letters van zijn naam met het nummer van de ${bc?'kolom':'rij'} (1 t/m 5) en tel alle vijf de uitkomsten op.`}
-else{const rot=R()*3|0,l=[];for(let pl=0;pl<5;pl++){const k=(pl+rot)%3;base+=p.C[k+1][p.sol[k].indexOf(pl)].length;l.push(`plek ${pl+1}: ${p.CN[k].toLowerCase()}`)}
-tx=`Tel het aantal letters op van: ${l.join(', ')}.`}
-const d=code-base;
-return E('div',{class:'card'},E('b',null,'Puzzel afgerond. Jouw som:'),E('p',null,tx),E('p',null,d>=0?`Tel daar ${d} bij op.`:`Trek daar ${-d} vanaf.`),E('p',null,'Onthoud dit antwoord. Je geeft het pas door als de hoofdpuzzel is opgelost.'))}
+function somCard(i,t,p){const R=rng(S.seed*271+i*13+7),code=codeOf(i);let A,B,ta,tb;
+if(t==0||t==1||t==5||t==7){const geo={0:x=>[(x/9|0)+1,x%9+1],1:x=>[(x/7|0)+1,x%7+1],5:x=>[(x/5|0)+1,x%5+1],7:x=>[(x/18|0)+1,(x%9>>1)+1]}[t];
+const ed=[...p.g.keys()].filter(x=>!p.g[x]&&(t!=7||(x%2==0&&(x/9|0)%2==0))),c=shuf(ed,R).slice(0,8),c1=c.slice(0,4).sort((a,b)=>a-b),c2=c.slice(4).sort((a,b)=>a-b),f=l=>l.map(x=>{const q=geo(x);return`(${q[0]},${q[1]})`}).join('  ');
+A=c1.reduce((a,x)=>a+p.sol[x],0);B=c2.reduce((a,x)=>a+p.sol[x],0);
+ta=`Tel de cijfers op die in deze vakjes staan (rij, kolom): ${f(c1)}.`;tb=`Tel de cijfers op die in deze vakjes staan (rij, kolom): ${f(c2)}.`}
+else if(t==2){const rot=R()*3|0,l=[];let a=0,b=0;for(let pl=0;pl<5;pl++){const k=(pl+rot)%3,n=p.C[k+1][p.sol[k].indexOf(pl)].length;if(pl<3)a+=n;else b+=n;l.push(`plek ${pl+1}: ${p.CN[k].toLowerCase()}`)}
+A=a;B=b;ta=`Tel het aantal letters op van: ${l.slice(0,3).join(', ')}.`;tb=`Tel het aantal letters op van: ${l.slice(3).join(', ')}.`}
+else if(t==3||t==4){const rs=shuf([0,1,2,3,4,5],R).slice(0,4),g=(a,b)=>{let z=0;[a,b].forEach(r=>{for(let c=0;c<6;c++)if(t==3?p.sol[r*6+c]==2:p.sol[r*6+c])z+=c+1});return z},
+x=rs.slice(0,2).sort(),y=rs.slice(2).sort();A=g(x[0],x[1]);B=g(y[0],y[1]);const w=t==3?'vakjes met een 1':'ingekleurde vakjes';
+ta=`Kijk naar rij ${x[0]+1} en rij ${x[1]+1}. Tel van alle ${w} het kolomnummer (1 t/m 6) bij elkaar op.`;tb=`Kijk naar rij ${y[0]+1} en rij ${y[1]+1}. Tel van alle ${w} het kolomnummer (1 t/m 6) bij elkaar op.`}
+else{const k=R()*5|0;A=0;B=0;for(let d=0;d<5;d++){A+=p.si[d*6];B+=p.si[k*5+d]}
+ta='Tel de hoogtes op van de 5 gebouwen op de diagonaal van linksboven naar rechtsonder.';tb=`Tel de hoogtes op van de 5 gebouwen in rij ${k+1}.`}
+const C=A>B?A-B:A+B,ev=C%2==0,rnd=m=>R()*m|0;let k1,k2;if(ev){k1=code-C;k2=rnd(41)-20}else{k2=code-2*C;k1=rnd(41)-10}
+const w1=k=>k>=0?`tel je ${k} bij C op`:`trek je ${-k} van C af`,w2=k=>k>=0?`tel je er ${k} bij op`:`trek je er ${-k} van af`;
+return E('div',{class:'card'},E('b',null,'Puzzel afgerond. Jouw som:'),E('ol',null,
+E('li',null,ta,E('b',null,' Noem de uitkomst A.')),E('li',null,tb,E('b',null,' Noem de uitkomst B.')),
+E('li',null,'Is A groter dan B? Dan trek je B van A af. Zo niet, dan tel je A en B bij elkaar op. ',E('b',null,'Noem de uitkomst C.')),
+E('li',null,'Is C even (eindigt op 0, 2, 4, 6 of 8)? Dan ',w1(k1),'. Is C oneven (eindigt op 1, 3, 5, 7 of 9)? Dan doe je C × 2 en ',w2(k2),'. ',E('b',null,'Dit is je antwoord.'))),
+E('p',null,'Onthoud dit antwoord. Je geeft het pas door als de hoofdpuzzel is opgelost.'))}
 /* ---------- logigram-tabel (gedeeld) ---------- */
 function logTable(root,p,o){const M=p.C[0].length,w=p.C.length-1;let lk=!!o.locked;p.sel=p.sel||Array(M*w).fill(-1);
 function draw(){const msg=E('div',{class:'msg'});
 const rows=p.C[0].map((pl,r)=>E('tr',null,E('td',null,pl),p.CN.map((_,k)=>{const s=E('select',{disabled:lk,on:{change:()=>{p.sel[r*w+k]=+s.value}}},E('option',{value:'-1'},'–'),p.C[k+1].map((n,j)=>E('option',{value:String(j)},n)));s.value=String(p.sel[r*w+k]);return E('td',null,s)})));
 const btn=lk?null:fin(msg,()=>{lk=true;draw()});
-put(root,E('table',{class:'lg'},E('tr',null,E('th'),p.CN.map(n=>E('th',null,n))),rows),btn,msg);if(lk)o.done(msg)}
+put(root,E('table',{class:'lg'},E('tr',null,E('th'),p.CN.map(n=>E('th',null,n))),rows),btn,msg);save();if(lk)o.done(msg)}
 draw()}
 /* ---------- grid UI ---------- */
 function gridUI(root,o){let sel=-1,lk=!!o.locked;const v=o.vals;rmKD();
 const set=n=>{if(!lk&&sel>=0&&!(o.fx&&o.fx[sel])){v[sel]=n;draw()}};
 function draw(){const msg=E('div',{class:'msg'});
 const g=E('div',{class:'grid',style:{gridTemplateColumns:`repeat(${o.cols},1fr)`,maxWidth:o.cols*(o.w||46)+'px'}},v.map((x,i)=>{const r=(i/o.cols)|0,c=i%o.cols;
-return E('div',{class:'cell'+(o.fx&&o.fx[i]?' fx':'')+(i==sel?' sel':''),style:{borderWidth:o.bd(r,c).map(z=>z?'3px':'1px').join(' '),background:o.bg?o.bg(r,c):''},on:{click:()=>{if(!lk){sel=i;draw()}}}},x?(o.sh?o.sh(x):x):'')}));
+return E('div',{class:'cell'+(o.fx&&o.fx[i]?' fx':'')+(i==sel?' sel':''),style:{borderWidth:o.bd(r,c).map(z=>z?'3px':'1px').join(' '),background:o.bg?o.bg(r,c):''},on:{click:()=>{if(!lk){sel=i;draw()}}}},o.tag&&o.tag(i)?E('small',null,o.tag(i)):null,x?(o.sh?o.sh(x):x):'')}));
 const pad=lk?null:E('div',{class:'pad'},[...Array(o.max)].map((_,k)=>E('button',{on:{click:()=>set(k+1)}},o.sh?o.sh(k+1):k+1)),E('button',{on:{click:()=>set(0)}},'Wis'));
 const chk=lk?null:fin(msg,()=>{lk=true;sel=-1;draw()});
-put(root,g,pad,chk,msg);if(lk)o.done(msg)}
+put(root,g,pad,chk,msg);save();if(lk)o.done(msg)}
 KD=e=>{if(/^[0-9]$/.test(e.key)&&+e.key<=o.max)set(+e.key)};document.addEventListener('keydown',KD);draw()}
+function nonUI(root,o){let lk=!!o.locked;rmKD();const v=o.vals,N=6,cs={border:'none',cursor:'default',aspectRatio:'auto',fontSize:'.75em',whiteSpace:'pre',alignItems:'flex-end',fontWeight:'600',background:'transparent'};
+function draw(){const msg=E('div',{class:'msg'}),cells=[E('div')];
+for(let c=0;c<N;c++)cells.push(E('div',{class:'cell',style:cs},o.cc[c].join('\n')));
+for(let r=0;r<N;r++){cells.push(E('div',{class:'cell',style:Object.assign({},cs,{justifyContent:'flex-end',paddingRight:'6px',alignItems:'center'})},o.rc[r].join(' ')));
+for(let c=0;c<N;c++){const q=r*N+c;cells.push(E('div',{class:'cell',style:{background:v[q]?'#1f4e9c':'',borderWidth:[r%2==0&&0,0,0,0].some(Boolean)?'3px':'1px'},on:{click:()=>{if(!lk){v[q]^=1;draw()}}}}))}}
+const g=E('div',{class:'grid',style:{gridTemplateColumns:`repeat(${N+1},1fr)`,maxWidth:(N+1)*46+'px'}},cells);
+put(root,g,lk?null:fin(msg,()=>{lk=true;draw()}),msg);save();if(lk)o.done(msg)}
+draw()}
 /* ---------- schermen ---------- */
+/* ---------- opslaan (blijft staan na verversen) ---------- */
+const KEY='escaperoom_state_v1',KS='escaperoom_seen_v1';
+function save(){try{if(!S.started)return;const vals={},sel={};for(const k in S.cache){const p=S.cache[k];if(p.vals)vals[k]=p.vals;if(p.sel)sel[k]=p.sel}
+localStorage.setItem(KEY,JSON.stringify({role:S.role,n:S.n,pp:S.pp,seed:S.seed,time:S.time,end:S.end,name:S.name,mine:S.mine,ok:S.ok,val:S.val,vals,sel,bigSel:S.big&&S.big.sel,ph:S.ph,left:S.left,fin:S.fin,tl:S.tl,cur:S.cur}))}catch(e){}}
+function clearSave(){try{localStorage.removeItem(KEY)}catch(e){}}
+function loadSave(){try{const d=JSON.parse(localStorage.getItem(KEY)||'null');return d&&d.seed&&d.role&&d.pp?d:null}catch(e){return null}}
+function showFin(){const f=S.fin;if(f=='time')ov('Tijd is op');else if(f=='locked')ov('Het cijferslot zit vast',E('br'),'Je 3 kansen zijn op.');else if(f=='escaped')ov('Ontsnapt',E('br'),'Tijd over: '+S.tl)}
+function resume(d){S={role:d.role,n:d.n,pp:d.pp,seed:d.seed,time:d.time,end:d.end,name:d.name,mine:d.mine||[],ok:d.ok||{},val:d.val||{},cache:{},kl:{},sv:d,started:1,left:d.left,fin:d.fin,tl:d.tl,ph:0,cur:d.cur};
+S.pz=schema(S.seed,S.n,S.pp);if(S.fin)S.over=1;else if(S.role=='h')S.iv=setInterval(tick,250);
+S.role=='h'?host():play();if(S.fin)showFin()}
+function abortBtn(){return E('div',{style:{marginTop:'28px',textAlign:'center'}},E('button',{on:{click:e=>{if(e.target.dataset.s)home();else{e.target.dataset.s='1';e.target.textContent='Zeker weten? Klik nog een keer om het spel te stoppen'}}}},'Spel stoppen'))}
+
 // Tijden gelden voor 2 puzzels per persoon; de echte tijd schaalt mee met "puzzels per persoon".
-const TIJDEN=[[30,'Extreem'],[40,'Moeilijk'],[50,'Normaal'],[60,'Makkelijk']];
+const TIJDEN=[[20,'Supersnel'],[30,'Extreem'],[40,'Moeilijk'],[50,'Normaal'],[60,'Makkelijk'],[75,'Rustig'],[90,'Heel rustig'],[120,'Ontspannen']];
 const ov=(...k)=>app.append(E('div',{class:'ov'},k,E('button',{on:{click:home}},'Opnieuw')));
 /* ---------- uitleg ---------- */
 function mg(rows,bs){const n=rows.length,w=rows[0].length;return E('div',{class:'grid',style:{gridTemplateColumns:`repeat(${w},1fr)`,maxWidth:w*40+'px'}},rows.flat().map((x,i)=>{const r=(i/w|0),c=i%w;
 return E('div',{class:'cell'+(x[0]=='*'?' fx':''),style:{borderWidth:[r%bs==0,c%bs==bs-1,r%bs==bs-1,c%bs==0].map(z=>z?'3px':'1px').join(' ')}},x==='.'?'':String(x).replace('*',''))}))}
-function uitleg(){const sec=(t,...k)=>E('details',null,E('summary',null,t),k);
+function pic(rows,o){o=o||{};const w=o.w||34,cols=rows[0].length;
+return E('div',{class:'grid',style:{gridTemplateColumns:`repeat(${cols},${w}px)`,width:'max-content',margin:'6px auto',background:'transparent'}},rows.flat().map((x,i)=>{const r=i/cols|0,c=i%cols;let q=String(x),fl='';while(q.length&&'*+#~_'.includes(q[0])){fl+=q[0];q=q.slice(1)}
+const st={width:w+'px',height:w+'px',aspectRatio:'auto',fontSize:'1em',cursor:'default'};
+if(fl.includes('_')){st.border='none';st.background='transparent';st.color='#667085';st.fontWeight='600'}else st.borderWidth=(o.bd?o.bd(r,c):[0,0,0,0]).map(z=>z?'3px':'1px').join(' ');
+if(fl.includes('#'))st.background='#1f4e9c';if(fl.includes('~'))st.background='#ffe08a';if(fl.includes('+')){st.color='#1a7f4b';st.fontWeight='700'}
+return E('div',{class:'cell'+(fl.includes('*')?' fx':''),style:st},o.tag&&o.tag[i]?E('small',null,o.tag[i]):null,q)}))}
+function uitleg(){const sec=(t,...k)=>E('details',null,E('summary',null,t),k),ex=(...k)=>E('div',{class:'ex'},k),tip=(...k)=>E('div',{class:'tip'},k),cap=t=>E('p',{class:'cap'},t),
+figs=(...f)=>E('div',{class:'pics'},f.map(([p,t])=>E('div',null,p,cap(t)))),tb=rows=>E('table',{class:'pt'},rows.map((r,i)=>E('tr',null,r.map(x=>E(i==0?'th':'td',null,x))))),st=(...k)=>E('ol',null,k.map(x=>E('li',null,x))),
+sb=(r,c)=>[r%2==0,c%2==1,r%2==1,c%2==0],tbd=(r,c)=>[r==0,c==1||c==3,r==1,c==0||c==2],bb=(r,c)=>[r==0,c==3,r==3,c==0],
+kr=[[0,0,1,1],[2,3,3,4],[2,5,5,4],[6,6,7,7]],kbd=(r,c)=>{const g=kr[r][c];return[r==0||kr[r-1][c]!=g,c==3||kr[r][c+1]!=g,r==3||kr[r+1][c]!=g,c==0||kr[r][c-1]!=g]},
+kt=Array(16).fill('');[[0,3],[2,7],[4,5],[5,5],[7,5],[9,5],[12,7],[14,3]].forEach(([i,v])=>kt[i]=String(v));
 put(app,E('div',{class:'logo'},E('b',null,'ESCAPEROOM'),E('small',null,'Uitleg en spelregels')),
-E('p',null,'Lees dit goed door voordat je begint. Klik op een kopje om het open te klappen.'),
-sec('Het doel van het spel',E('p',null,'Jullie zitten opgesloten. Alleen met een 6-cijferige kluiscode kunnen jullie ontsnappen, en die code krijg je alleen als jullie alle puzzels goed oplossen en daarna een lange, moeilijke som goed uitrekenen. Er is één tijdslimiet: de klok loopt op het apparaat van de hoofdpuzzel.')),
-sec('Hoe het spel verloopt',E('ol',null,
-E('li',null,'Eén apparaat is de ',E('b',null,'hoofdpuzzel'),' (de host). Alle anderen zijn ',E('b',null,'oplossers'),'. Vul overal hetzelfde aantal spelers, dezelfde puzzels per persoon, dezelfde seed en dezelfde moeilijkheid in.'),
-E('li',null,'In de lobby zie je het schema met alle puzzels. Overleg wie welke puzzels doet. Elke speler kiest precies zijn eigen aantal puzzels, en elke puzzel wordt door één speler gedaan.'),
-E('li',null,'De host start het spel en de klok gaat lopen. De oplossers spelen zonder klok.'),
-E('li',null,'Los je puzzel op en klik op ',E('b',null,'Puzzel afronden'),'. Je krijgt de vraag of je het zeker weet. Dit kan niet ongedaan worden gemaakt. Je krijgt dus ',E('b',null,'geen'),' melding of je puzzel goed of fout is.'),
-E('li',null,'Direct na het afronden krijg je een som. Die kun je alleen uitrekenen met de opgeloste puzzel. Het antwoord is jouw getal. Schrijf het op en onthoud het.'),
-E('li',null,'Ondertussen lost de host het grote, extreem moeilijke logigram op en rondt dat af.'),
-E('li',null,'Pas daarna geven alle spelers hun antwoord door aan de host, die ze invult. Er komt geen melding of een antwoord klopt.'),
-E('li',null,'Als alle antwoorden zijn ingevoerd, verschijnt de laatste som. Die gebruikt jullie antwoorden en de oplossing van de hoofdpuzzel. De uitkomst is de kluiscode.'),
-E('li',null,'Klopt de kluiscode, dan zijn jullie ontsnapt. Is de tijd eerder op, dan niet.'))),
-sec('Sudoku',E('p',null,'Vul het rooster zo in dat in elke rij, elke kolom en elk dik omlijnd blok alle cijfers precies één keer staan (in het spel: cijfers 1 t/m 9 in een 9×9-rooster met 3×3-blokken). De vetgedrukte cijfers staan al vast.'),
-E('div',{class:'ex'},E('b',null,'Voorbeeld in klein formaat (4×4, cijfers 1 t/m 4)'),mg([['*1','.','.','*4'],['.','*4','*1','.'],['*2','.','*4','.'],['.','*3','.','*1']],2),
-E('p',null,'Het blok linksboven heeft al 1 en 4, dus de lege vakjes daar zijn 2 en 3. Kolom 2 bevat al een 4 en een 3, dus het vakje in rij 1, kolom 2 kan geen 3 zijn en moet 2 zijn. Het vakje ernaast (rij 1, kolom 3) wordt dan 3.'))),
-sec('Tectonic',E('p',null,'Het rooster is verdeeld in gebieden met dikke randen. Een gebied van n vakjes bevat de cijfers 1 t/m n, elk één keer. Bovendien mogen twee gelijke cijfers elkaar nergens raken, ook niet diagonaal. De vetgedrukte cijfers staan al vast.'),
-E('div',{class:'ex'},E('b',null,'Voorbeeld'),E('p',null,'Een gebied van 3 vakjes bevat precies 1, 2 en 3. Staat er in een buurvak (ook schuin) al een 2, dan kan jouw vakje geen 2 zijn. Heeft een gebied van 3 vakjes al een 1 en een 3, dan moet het laatste vakje een 2 zijn.'))),
-sec('Murdoku',E('p',null,'Op een plattegrond van 5×5 vakjes met vijf kamers zet je vijf verdachten. In elke rij en in elke kolom staat precies één verdachte. Je kiest een vakje en daarna de beginletter van de naam. De aanwijzingen vertellen waar iemand zit.'),
-E('div',{class:'ex'},E('b',null,'Voorbeeld'),E('p',null,'Aanwijzingen: "Anna zit in rij 1", "Bram zit in kolom 3", "Cas zit (ergens) links van Anna". Anna staat dus in rij 1. Cas moet links van haar staan, dus Anna staat nooit in kolom 1. Heb je Bram in kolom 3 gezet, dan kan niemand anders meer in kolom 3 staan. Zo schuif je stap voor stap alles op zijn plek.'))),
-sec('Logigram',E('p',null,'Een tabel met plekken en eigenschappen (zoals naam, beroep en kleur). Je kiest bij elke plek en eigenschap het juiste item uit de lijst. Elk item hoort bij precies één plek. De aanwijzingen vertellen welke items bij elkaar horen of waar ze staan.'),
-E('div',{class:'ex'},E('b',null,'Voorbeeld met 3 plekken'),E('p',null,'Aanwijzingen: 1) Anna staat links van Bram. 2) Cas staat direct naast Anna. 3) Cas staat niet op plek 2. 4) Bram is de Kok. 5) Anna is de Arts.'),
-E('p',null,'Uit 1 en 2 volgt dat Cas links of rechts van Anna staat, met Bram rechts van Anna. Cas staat niet op plek 2 (aanwijzing 3), dus Cas staat op plek 1, Anna op plek 2 en Bram op plek 3. Anna is de Arts en Bram is de Kok, dus Cas is de Bakker.'),
-E('table',{class:'lg'},E('tr',null,E('th'),E('th',null,'Naam'),E('th',null,'Beroep')),E('tr',null,E('td',null,'Plek 1'),E('td',null,'Cas'),E('td',null,'Bakker')),E('tr',null,E('td',null,'Plek 2'),E('td',null,'Anna'),E('td',null,'Arts')),E('tr',null,E('td',null,'Plek 3'),E('td',null,'Bram'),E('td',null,'Kok'))),
-E('p',{class:'mu'},'"Staat links van" betekent: ergens links, niet per se direct ernaast. "Direct naast elkaar" betekent: vlak naast elkaar. "Met precies één plek ertussen" betekent dat er één plek tussen zit.'))),
-sec('De som na je puzzel',E('p',null,'Na het afronden krijg je een som die alleen werkt met de opgeloste puzzel. Zo kan niemand de som oplossen zonder de puzzel te maken.'),
-E('div',{class:'ex'},E('b',null,'Voorbeeld (Murdoku)'),E('p',null,'"Kijk bij elke rij welke persoon daar staat. Vermenigvuldig het aantal letters van zijn naam met het nummer van de rij en tel alle vijf de uitkomsten op. Tel daar 17 bij op." Staat in rij 1 Anna (4 letters), dan is dat 1 × 4 = 4. Rij 2 met Cas (3 letters) geeft 2 × 3 = 6. Zo ga je door alle rijen, je telt alles op en daarna doe je de laatste bijtelling of aftrekking. De uitkomst is jouw antwoord.'))),
-sec('De hoofdpuzzel en de laatste som',E('p',null,'De hoofdpuzzel is een groot logigram met 7 categorieën en 8 plekken, dus echt moeilijk. Daarna volgt een lange som van ongeveer 19 stappen met de antwoorden van alle spelers, getallen uit het logigram ("plek van X") en letteraantallen. In de som komt "mod m" voor: dat is de rest na deling door m. Voer elke stap precies in de volgorde uit.')),
-sec('Tips',E('div',{class:'tip'},E('b',null,'Gebruik kladpapier. '),'Schrijf aanwijzingen, tussenstappen en alle stappen van de sommen op papier.'),
-E('div',{class:'tip'},E('b',null,'Geen rekenmachine. '),'Reken alles zelf uit, ook de lange som. Controleer elke stap twee keer.'),
-E('div',{class:'tip'},E('b',null,'Geen andere telefoon of hulp. '),'Geen zoekmachine, geen AI en geen puzzelsolver. Alleen jullie eigen hersenen en kladpapier.'),
-E('div',{class:'tip'},E('b',null,'Rond pas af als je zeker bent. '),'Afronden kan niet ongedaan worden gemaakt en je krijgt geen goed/fout-melding. Controleer je puzzel dus eerst zelf.'),
-E('div',{class:'tip'},E('b',null,'Werk samen. '),'Help elkaar met rekenen en controleer elkaars antwoorden voordat je ze doorgeeft. Eén fout in één antwoord maakt de kluiscode fout.'),
-E('div',{class:'tip'},E('b',null,'Let op de tijd. '),'Alleen het apparaat van de hoofdpuzzel heeft een klok. Die wordt rood in de laatste 5 minuten.')),
-E('button',{class:'pri',on:{click:home}},'Ik heb het begrepen, naar het startscherm'))}
-function home(){clearInterval(S.iv);S={};rmKD();put(app,E('div',{class:'logo'},E('b',null,'ESCAPEROOM'),E('small',null,'Puzzelopdracht op tijd')),
+E('p',null,'Lees dit goed door voordat je begint. Klik op een kopje om het open te klappen. Je kunt deze uitleg later altijd weer openen via het startscherm.'),
+sec('1. Wat is het doel?',E('p',null,'Jullie zitten opgesloten. De deur gaat open met een cijferslot. Je hebt ',E('b',null,'3 kansen'),' om de juiste code in te voeren.'),
+E('p',null,'De code vind je zo: iedereen lost eigen puzzels op en rekent daarna een korte som uit. Daarna lost de host een groot raadsel op. Tot slot rekenen jullie samen een lange som uit met simpele rekenstapjes. De uitkomst is de code.'),
+E('p',null,'Alles kun je uit je hoofd of op kladpapier uitrekenen. Een rekenmachine is niet nodig en niet toegestaan.'),
+E('p',null,'Het spel wordt automatisch bewaard. Ververs je de pagina per ongeluk? Dan ga je gewoon verder waar je was, ook de klok loopt door.')),
+sec('2. Stap voor stap: zo verloopt het spel',st(
+[E('b',null,'Kies een rol. '),'Eén apparaat is de ',E('b',null,'Hoofdpuzzel'),' (de host). Alle andere apparaten zijn ',E('b',null,'Oplossers'),'. Vul overal precies hetzelfde in: aantal spelers, puzzels per persoon en seed. De host kiest ook de tijd.'],
+[E('b',null,'Verdeel de puzzels. '),'In de lobby staat een lijst met alle puzzels. Overleg wie welke puzzels doet. Iedere speler kiest precies zijn eigen aantal puzzels. Elke puzzel wordt door één speler gedaan.'],
+[E('b',null,'Start. '),'De host drukt op Start. Dan begint de klok. Alleen de host heeft een klok, de oplossers spelen zonder klok.'],
+[E('b',null,'Los je puzzels op. '),'Als je klaar bent, druk je op ',E('b',null,'Puzzel afronden'),'. Je krijgt de vraag of je het zeker weet. Na ',E('b',null,'Ja'),' kun je niets meer veranderen. Je hoort niet of de puzzel goed of fout is.'],
+[E('b',null,'Reken de som van je puzzel uit. '),'Direct na het afronden krijg je een som met een paar stappen. Die kun je alleen uitrekenen als je puzzel goed is opgelost. Schrijf het antwoord op en houd het bij je.'],
+[E('b',null,'De host lost de hoofdpuzzel op. '),'Dat is een groot logigram, een tandje moeilijker dan het gewone logigram. Reken op 10 tot 15 minuten. Klaar? Dan drukt de host op Puzzel afronden.'],
+[E('b',null,'Antwoorden doorgeven. '),'Zodra de hoofdpuzzel is afgerond, geeft elke speler zijn antwoorden door. De host voert ze in. Je krijgt geen melding of een antwoord klopt.'],
+[E('b',null,'De laatste som. '),'Als alle antwoorden zijn ingevoerd, verschijnt de laatste som. Reken die van boven naar beneden uit. De uitkomst van de laatste regel is de code voor het cijferslot.'],
+[E('b',null,'Cijferslot. '),'Voer de code in. Je hebt 3 kansen. Klopt de code, dan zijn jullie ontsnapt. Is de tijd op, of zijn de 3 kansen gebruikt, dan niet.'])),
+sec('3. Sudoku',E('p',null,E('b',null,'Regel: '),'Zet in elk leeg vakje een cijfer, zodat in elke rij, elke kolom en elk dik omlijnd blok alle cijfers precies één keer voorkomen. In het spel is het een rooster van 9×9 met cijfers 1 t/m 9 en blokken van 3×3. Hier zie je een klein voorbeeld van 4×4 met cijfers 1 t/m 4 en blokken van 2×2.'),
+ex(E('b',null,'Voorbeeld'),figs([pic([['*1','~','~','*4'],['','*4','*1',''],['*2','','*4',''],['','*3','','*1']],{bd:sb}),'Begin. Blauw staat al vast. De gele vakjes lossen we eerst op.'],[pic([['*1','+2','+3','*4'],['+3','*4','*1','+2'],['*2','+1','*4','+3'],['+4','*3','+2','*1']],{bd:sb}),'Opgelost. Groen heb je zelf ingevuld.']),
+st('Kijk naar het blok linksboven. Daar staan al een 1 en een 4. De lege vakjes in dat blok zijn dus 2 en 3.','Kijk naar kolom 2. Daar staan al een 4 en een 3. Het gele vakje bovenaan kolom 2 kan dus geen 3 zijn en wordt een 2.','Rij 1 heeft nu 1, 2 en 4. Het laatste gele vakje is dus 3.','Zo ga je door: zoek steeds een vakje waar maar één cijfer past.')),
+tip('Begin met de rijen, kolommen en blokken die al bijna vol zijn.')),
+sec('4. Tectonic',E('p',null,E('b',null,'Regel: '),'Het rooster is verdeeld in gebieden met dikke randen. Een gebied met 4 vakjes bevat de cijfers 1, 2, 3 en 4, elk één keer. Een gebied met 3 vakjes bevat 1, 2 en 3. Twee gelijke cijfers mogen elkaar nergens raken, ook niet schuin.'),
+ex(E('b',null,'Voorbeeld met twee gebieden van 4 vakjes'),figs([pic([['*1','','*4','*2'],['','*2','*1','']],{bd:tbd}),'Begin. Links en rechts is een gebied van 4 vakjes.'],[pic([['*1','+3','*4','*2'],['+4','*2','*1','+3']],{bd:tbd}),'Opgelost.']),
+st('Het rechtergebied heeft al 4, 2 en 1. Het lege vakje rechtsonder is dus 3.','Het linkergebied heeft al 1 en 2. De twee lege vakjes zijn 3 en 4.','Het lege vakje linksboven raakt de 4 in het gebied ernaast. Het kan dus geen 4 zijn en wordt 3. Het vakje linksonder wordt dan 4.'))),
+sec('5. Logigram',E('p',null,E('b',null,'Regel: '),'Je vult een tabel in met plekken en eigenschappen, zoals naam en beroep. Kies bij elke plek het juiste item. Elk item hoort bij precies één plek. De aanwijzingen zeggen welke items bij elkaar horen of waar ze staan.'),
+ex(E('b',null,'Voorbeeld met 3 plekken'),E('p',null,'Aanwijzingen: 1) Anna staat links van Bram. 2) Cas staat direct naast Anna. 3) Cas staat niet op plek 2. 4) Bram is de Kok. 5) Anna is de Arts.'),
+figs([tb([['','Plek 1','Plek 2','Plek 3'],['Naam','?','?','?'],['Beroep','?','?','?']]),'Begin: alles is nog leeg.'],[tb([['','Plek 1','Plek 2','Plek 3'],['Naam','Cas','Anna','Bram'],['Beroep','?','?','?']]),'Na aanwijzing 1, 2 en 3.'],[tb([['','Plek 1','Plek 2','Plek 3'],['Naam','Cas','Anna','Bram'],['Beroep','Bakker','Arts','Kok']]),'Opgelost.']),
+st('Anna staat links van Bram en Cas staat direct naast Anna. Dat kan alleen als Cas, Anna en Bram zo staan: Cas, Anna, Bram, of Anna, Cas, Bram.','Cas staat niet op plek 2 (aanwijzing 3). Dus Cas staat op plek 1, Anna op plek 2 en Bram op plek 3.','Anna is de Arts en Bram is de Kok (aanwijzing 4 en 5). Cas is dan de Bakker.'),
+E('ul',null,E('li',null,E('b',null,'Staat links van'),': ergens links, niet per se direct ernaast.'),E('li',null,E('b',null,'Direct naast elkaar'),': vlak naast elkaar.'),E('li',null,E('b',null,'Met precies één plek ertussen'),': er zit één plek tussen.'),E('li',null,E('b',null,'Hoort niet bij'),': dit zijn twee verschillende plekken.'))),
+tip('Zet de aanwijzingen die zeker zijn eerst in de tabel en kruis de rest af op kladpapier.')),
+sec('6. Binairo',E('p',null,E('b',null,'Regel: '),'Vul elk leeg vakje met een 0 of een 1. In elke rij en kolom staan evenveel nullen als enen. Er staan nooit drie gelijke cijfers achter elkaar, niet in een rij en niet in een kolom. In het spel is het rooster 6×6 (drie nullen en drie enen per rij en kolom). Hier een voorbeeld van 4×4 (twee van elk).'),
+ex(E('b',null,'Voorbeeld'),figs([pic([['*0','*0','',''],['','*1','*0',''],['','','*1','*0'],['*1','','','*1']],{bd:bb,w:38}),'Begin.'],[pic([['*0','*0','+1','+1'],['+1','*1','*0','+0'],['+0','+1','*1','*0'],['*1','+0','+0','*1']],{bd:bb,w:38}),'Opgelost.']),
+st('Rij 1 heeft al twee nullen. De andere twee vakjes zijn dus 1 en 1.','Rij 4 heeft al twee enen. De twee vakjes in het midden zijn dus 0 en 0.','Kolom 2 heeft nu 0, 1, ?, 0. Er staan al twee nullen, dus het lege vakje is 1.','Rij 3 heeft nu twee enen. Het vakje links is dus 0. Kolom 1 heeft dan 0, ?, 0, 1, dus het lege vakje in rij 2 is 1. Het laatste vakje van rij 2 is dan 0.'))),
+sec('7. Nonogram',E('p',null,E('b',null,'Regel: '),'Tik vakjes aan om ze in te kleuren. De getallen bij een rij of kolom zeggen hoe lang de blokken ingekleurde vakjes zijn, in volgorde. Tussen twee blokken zit minstens één leeg vakje. Een rij met "1 1" heeft dus twee losse gekleurde vakjes met minstens één leeg vakje ertussen.'),
+ex(E('b',null,'Voorbeeld van 5×5'),figs([pic([['_','_2','_4','_4','_4','_2'],['_1 1','','','','',''],['_5','','','','',''],['_5','','','','',''],['_3','','','','',''],['_1','','','','','']]),'Begin.'],
+[pic([['_','_2','_4','_4','_4','_2'],['_1 1','','','','',''],['_5','#','#','#','#','#'],['_5','#','#','#','#','#'],['_3','','#','#','#',''],['_1','','','','','']]),'Na stap 1 en 2.'],
+[pic([['_','_2','_4','_4','_4','_2'],['_1 1','','#','','#',''],['_5','#','#','#','#','#'],['_5','#','#','#','#','#'],['_3','','#','#','#',''],['_1','','','#','','']]),'Opgelost.']),
+st('De rijen met een 5 zijn helemaal gekleurd (rij 2 en 3).','Kolom 2, 3 en 4 hebben een 4 in 5 vakjes. Dus rij 2, 3 en 4 zijn daar zeker gekleurd. Kolom 1 en 5 hebben een 2. Rij 2 en 3 zijn al gekleurd, dus de rest van die kolommen blijft leeg.','Rij 1 heeft "1 1" en alleen kolom 2, 3 en 4 zijn nog vrij. Twee losse vakjes passen alleen in kolom 2 en 4.','Kolom 3 heeft nu rij 2, 3 en 4 en heeft er nog één nodig. Rij 1 is leeg in kolom 3, dus het vakje in rij 5 wordt gekleurd.'))),
+sec('8. Killer',E('p',null,E('b',null,'Regel: '),'Zet in elk vakje een cijfer, zodat elk cijfer in elke rij en elke kolom één keer staat. Het kleine getal in de hoek van een omrand gebied is de som van alle cijfers in dat gebied. In het spel zijn het cijfers 1 t/m 5. Hier een voorbeeld van 4×4 met cijfers 1 t/m 4.'),
+ex(E('b',null,'Voorbeeld'),figs([pic([['*1','','',''],['*3','*4','',''],['','','*4',''],['','','','*1']],{bd:kbd,tag:kt,w:42}),'Begin. Blauw staat al vast. Het kleine getal is de som van het gebied.'],[pic([['*1','+2','+3','+4'],['*3','*4','+1','+2'],['+2','+1','*4','+3'],['+4','+3','+2','*1']],{bd:kbd,tag:kt,w:42}),'Opgelost.']),
+st('Het gebied linksboven heeft som 3 en bestaat dus uit 1 en 2. Er staat al een 1, dus het vakje ernaast is 2.','Het gebied rechtsonder heeft som 3 en dus 1 en 2. Rechtsonder staat een 1, dus het vakje ernaast is 2.','Het gebied rechtsboven heeft som 7 en dus 3 en 4. Kolom 3 heeft al een 4 (in rij 3), dus daarboven staat de 3 en rechts daarvan de 4.','Het gebied linksonder heeft som 7 en dus 3 en 4. Kolom 2 heeft al een 4 (in rij 2), dus onderaan kolom 2 staat de 3 en links daarvan de 4.','Het gebied met de 4 in het midden heeft som 5. Het vakje ernaast is dus 1. Het gebied met de 4 eronder heeft ook som 5, dus het vakje links daarvan is 1.','Zo vul je de rest in met de regel dat elk cijfer één keer in elke rij en kolom staat.'))),
+sec('9. Wolkenkrabbers',E('p',null,E('b',null,'Regel: '),'Zet in elk vakje een gebouw met een hoogte, zodat elke hoogte in elke rij en kolom één keer voorkomt. Het getal buiten het rooster zegt hoeveel gebouwen je ziet als je vanaf die kant kijkt. Een hoog gebouw verbergt lagere gebouwen erachter. In het spel zijn het hoogtes 1 t/m 5. Hier een voorbeeld van 4×4 met hoogtes 1 t/m 4.'),
+ex(E('b',null,'Voorbeeld'),figs([pic([['_','*3','_','_','_','_'],['*4','','','','','_'],['_','','*4','','','_'],['_','','','','','_'],['*1','','','','','*4'],['_','_','_','_','_','_']]),'Begin. De getallen buiten het rooster zijn de aanwijzingen.'],
+[pic([['_','*3','_','_','_','_'],['*4','+1','+2','+3','+4','_'],['_','+3','*4','+1','+2','_'],['_','+2','+1','+4','+3','_'],['*1','+4','+3','+2','+1','*4'],['_','_','_','_','_','_']]),'Opgelost.']),
+st('Links van rij 1 staat een 4. Je ziet dan 4 gebouwen, dus ze staan oplopend: 1, 2, 3, 4.','Rechts van rij 4 staat een 4. Vanaf rechts zie je 4 gebouwen, dus rij 4 is van rechts naar links 1, 2, 3, 4. Dat is van links naar rechts 4, 3, 2, 1. De 1 links van rij 4 klopt daarmee.','Kolom 1 heeft nu 1 bovenaan en 4 onderaan. Voor de rijen 2 en 3 blijven 2 en 3 over. Boven kolom 1 staat een 3. Staat de 2 in rij 2, dan zie je 1, 2, 3, 4, dus 4 gebouwen. Dat klopt niet. Dus rij 2 heeft een 3 en rij 3 heeft een 2.','Rij 2 begint met 3 en heeft in kolom 2 een 4 (dat is gegeven). Kolom 2 heeft nu 2, 4, ?, 3, dus de 1 staat in rij 3.','De rest volgt uit de regel dat elk cijfer één keer in elke rij en kolom staat: rij 2 wordt 3, 4, 1, 2 en rij 3 wordt 2, 1, 4, 3.'))),
+sec('10. Futoshiki',E('p',null,E('b',null,'Regel: '),'Zet in elk vakje een cijfer, elk cijfer één keer per rij en kolom. Het teken tussen twee vakjes wijst naar het kleinere getal: bij < is het linkervakje kleiner en bij > is het linkervakje groter. Staat er ∧ tussen twee vakjes boven elkaar, dan is het bovenste kleiner. Bij ∨ is het onderste kleiner. In het spel zijn het cijfers 1 t/m 5. Hier een voorbeeld van 3×3 met cijfers 1 t/m 3.'),
+ex(E('b',null,'Voorbeeld'),figs([pic([['','_','','*>',''],['_','_','_','_','_'],['','*>','','*>',''],['_','_','_','_','_'],['','_','','_','']]),'Begin.'],[pic([['+1','_','+3','*>','+2'],['_','_','_','_','_'],['+3','*>','+2','*>','+1'],['_','_','_','_','_'],['+2','_','+1','_','+3']]),'Opgelost.']),
+st('Rij 2 heeft twee keer het teken >. Dus het eerste getal is groter dan het tweede en het tweede groter dan het derde. Met de cijfers 1, 2 en 3 kan dat alleen als 3, 2, 1.','In rij 1 is het middelste vakje groter dan het vakje rechts. Kolom 2 heeft al een 2 (in rij 2), dus rij 1 heeft in kolom 2 een 1 of een 3. Kolom 3 heeft al een 1, dus rij 1 heeft in kolom 3 een 2 of een 3.','Het middelste vakje moet groter zijn dan het vakje rechts. Dat kan alleen als het midden 3 is en rechts 2. Dan is het vakje links 1.','Rij 3 vul je aan met de regel dat elk cijfer één keer per rij en kolom staat: 2, 1, 3.'))),
+sec('11. De som na je puzzel',E('p',null,'Na het afronden krijg je een som met 4 stappen. Die is gemaakt van jouw opgeloste puzzel, dus je kunt hem alleen uitrekenen als je puzzel goed is. Er zitten ook "als"-opdrachten in: je kijkt eerst naar een getal en kiest dan wat je doet.'),
+ex(E('b',null,'Voorbeeld'),
+st('Tel de cijfers op die in deze vakjes staan (rij, kolom): (1,3) (2,5) (4,1) (6,2). Noem de uitkomst A.','Tel de cijfers op die in deze vakjes staan (rij, kolom): (3,3) (5,5) (7,7) (8,1). Noem de uitkomst B.','Is A groter dan B? Dan trek je B van A af. Zo niet, dan tel je A en B bij elkaar op. Noem de uitkomst C.','Is C even? Dan tel je 12 bij C op. Is C oneven? Dan doe je C × 2 en trek je er 5 van af. Dit is je antwoord.'),
+E('p',null,E('b',null,'Uitgewerkt: '),'In je opgeloste puzzel staan bij de eerste vier vakjes de cijfers 4, 7, 2 en 5. Dat is A = 4 + 7 + 2 + 5 = 18. Bij de volgende vier vakjes staan 3, 9, 1 en 6. Dat is B = 3 + 9 + 1 + 6 = 19.'),
+E('p',null,'Is A groter dan B? Nee, 18 is kleiner dan 19. Dan tel je ze op: C = 18 + 19 = 37.'),
+E('p',null,'Is C even? 37 eindigt op een 7, dus C is oneven. Dan doe je C × 2 = 74 en trek je er 5 van af: 74 − 5 = 69. Het antwoord is dus 69.'),
+E('p',{class:'mu'},'Even betekent: eindigt op 0, 2, 4, 6 of 8. Oneven betekent: eindigt op 1, 3, 5, 7 of 9.')),
+tip('Schrijf A, B en C op kladpapier. Laat het antwoord aan niemand zien tot de hoofdpuzzel klaar is.')),
+sec('12. De laatste som',E('p',null,'Als alle spelers hun antwoord hebben doorgegeven, krijgen jullie een lijstje met regels. Elke regel is een simpel sommetje: optellen, aftrekken of vermenigvuldigen met een klein getal. Je rekent van boven naar beneden. Elke regel gebruikt de uitkomst van de regel erboven.'),
+ex(E('b',null,'Voorbeeld'),E('p',null,'Antwoorden: P1 = 45 en P2 = 62. In de hoofdpuzzel staat Hond op plek 3. Het woord Kat heeft 3 letters.'),
+tb([['Regel','Uitrekenen'],['A = P1 + P2','45 + 62 = 107'],['B = A × plek van Hond','107 × 3 = 321'],['C = B − aantal letters van Kat','321 − 3 = 318'],['Kluiscode = C','318']]),
+E('p',null,'De code is dus 318. In het echte spel zijn er meer regels, maar ze zijn allemaal zo simpel.')),
+E('ul',null,E('li',null,E('b',null,'plek van X'),': zoek X in jullie opgeloste hoofdpuzzel en kijk bij welke plek (1 t/m 6) het staat.'),E('li',null,E('b',null,'aantal letters van X'),': tel de letters van het woord.')),
+tip('Schrijf na elke regel de uitkomst op. Controleer elke regel twee keer, want één fout maakt de code fout.')),
+sec('13. Tips',tip(E('b',null,'Gebruik kladpapier. '),'Schrijf aanwijzingen en tussenstappen op.'),
+tip(E('b',null,'Geen rekenmachine. '),'Alle sommen zijn zo gemaakt dat je ze zelf kunt doen.'),
+tip(E('b',null,'Geen andere telefoon of hulp. '),'Geen zoekmachine, geen AI en geen puzzelsolver. Alleen jullie eigen hersenen en kladpapier.'),
+tip(E('b',null,'Rond pas af als je zeker bent. '),'Afronden kan niet ongedaan worden gemaakt en je krijgt geen goed/fout-melding. Controleer je puzzel dus eerst zelf.'),
+tip(E('b',null,'Werk samen. '),'Controleer elkaars antwoorden voordat je ze doorgeeft. Eén fout in één antwoord maakt de code fout.'),
+tip(E('b',null,'Let op de tijd. '),'Alleen de host heeft een klok. Die wordt rood in de laatste 5 minuten.'),
+tip(E('b',null,'Drie kansen. '),'Bij het cijferslot mag je 3 keer een code proberen. Controleer dus eerst je rekenwerk voordat je invoert.')),
+E('button',{class:'pri',on:{click:()=>{try{localStorage.setItem(KS,'1')}catch(e){}home()}}},'Ik heb het begrepen, naar het startscherm'))}
+function home(){clearInterval(S.iv);clearSave();S={};rmKD();put(app,E('div',{class:'logo'},E('b',null,'ESCAPEROOM'),E('small',null,'Puzzelopdracht op tijd')),
 E('div',{class:'card'},E('b',null,'Tijdadvies'),' (bij 2 puzzels per persoon; de tijd schaalt mee met het aantal puzzels per persoon)',E('table',null,TIJDEN.slice().reverse().map(([m,l])=>E('tr',null,E('td',null,m+' min'),E('td',null,l))))),
 E('button',{on:{click:uitleg}},'Uitleg en spelregels'),E('p',null,'Kies je rol:'),E('button',{class:'pri',on:{click:()=>setup('s')}},'Oplossers'),E('button',{class:'pri',on:{click:()=>setup('h')}},'Hoofdpuzzel'))}
-function setup(role){const nm=E('input',{maxLength:20,placeholder:'Naam'}),n=E('input',{type:'number',min:'1',max:'8',value:'2'}),pp=E('input',{type:'number',min:'1',max:'6',value:'3'}),sd=E('input',{inputMode:'numeric',maxLength:6,placeholder:'123456'}),
+function setup(role){const nm=E('input',{maxLength:20,placeholder:'Naam'}),n=E('input',{type:'number',min:'1',max:'8',value:'2'}),pp=E('input',{type:'number',min:'1',max:'6',value:'3'}),sd=E('input',{inputMode:'numeric',maxLength:6,placeholder:'123456'}),cm=E('input',{type:'number',min:'5',max:'300',placeholder:'bijv. 45'}),
 tm=E('select',null,TIJDEN.map(([m,l])=>E('option',{value:String(m),selected:m==50},l+' (basis '+m+' min bij 2 per persoon)'))),err=E('div',{class:'err'});
 put(app,E('h2',null,role=='h'?'Hoofdpuzzel':'Oplosser'),role=='h'?E('p',{class:'mu'},'De hoofdpuzzel heeft geen speler. Het apparaat regelt de tijd en lost het grote logigram op.'):E('label',null,'Jouw naam',nm),
 E('label',null,'Aantal spelers',n),E('label',null,'Puzzels per persoon (1–6)',pp),E('p',{class:'mu'},'Gebruik overal dezelfde aantallen, dezelfde seed en dezelfde moeilijkheid. Totaal maximaal 20 puzzels.'),
 E('label',null,'Seed (6 cijfers)',sd),role=='h'?E('button',{on:{click:()=>{sd.value=String(100000+crypto.getRandomValues(new Uint32Array(1))[0]%900000)}}},'Willekeurige seed'):null,
-role=='h'?E('label',null,'Moeilijkheid (tijd schaalt mee met puzzels per persoon)',tm):E('p',{class:'mu'},'De tijd wordt alleen op de hoofdpuzzel bijgehouden. Jij speelt zonder klok.'),
-E('button',{class:'pri',on:{click:()=>go(role,nm.value.trim(),+n.value,+pp.value,sd.value,+tm.value,err)}},'Verder'),err,E('button',{on:{click:home}},'Terug'))}
-function go(role,name,n,pp,sd,time,err){if(role=='s'&&!name)return err.textContent='Vul je naam in.';
+role=='h'?E('label',null,'Moeilijkheid (tijd schaalt mee met puzzels per persoon)',tm):E('p',{class:'mu'},'De tijd wordt alleen op de hoofdpuzzel bijgehouden. Jij speelt zonder klok.'),role=='h'?E('label',null,'Of kies zelf de totale tijd in minuten (5 t/m 300). Laat leeg om de keuze hierboven te gebruiken.',cm):null,
+E('button',{class:'pri',on:{click:()=>go(role,nm.value.trim(),+n.value,+pp.value,sd.value,+tm.value,err,+cm.value)}},'Verder'),err,E('button',{on:{click:home}},'Terug'))}
+const schema=(seed,n,pp)=>{const RT=rng(seed*7+13);return shuf([...Array(n*pp)].map((_,i)=>i<8?i:RT()*8|0),RT)};
+function go(role,name,n,pp,sd,time,err,custom){if(role=='s'&&!name)return err.textContent='Vul je naam in.';
 if(!/^\d{6}$/.test(sd)||!(n>=1&&n<=8)||!(pp>=1&&pp<=6))return err.textContent='Vul 1–8 spelers, 1–6 puzzels per persoon en een seed van 6 cijfers in.';
 if(n*pp>20)return err.textContent='Maximaal 20 puzzels in totaal (spelers × puzzels per persoon).';
-time=Math.round(time*pp/2);
+time=custom>=5&&custom<=300?Math.round(custom):Math.round(time*pp/2);
 S={role,n,pp,seed:+sd,time,ok:{},val:{},cache:{},kl:{},name,mine:[]};
 // willekeurig schema per seed; elk type komt minstens één keer voor (als er 4+ puzzels zijn)
-const RT=rng(S.seed*7+13);S.pz=shuf([...Array(n*pp)].map((_,i)=>i<4?i:RT()*4|0),RT);
+S.pz=schema(S.seed,n,pp);
 const chosen=new Set(),el=E('div',{class:'err'});
 const list=S.pz.map((t,i)=>{const cb=E('input',{type:'checkbox',on:{change:()=>{if(cb.checked&&chosen.size>=pp){cb.checked=false;el.textContent=`Je kunt maar ${pp} puzzel(s) kiezen.`;return}el.textContent='';cb.checked?chosen.add(i):chosen.delete(i)}}});return E('label',{class:'pk'},cb,`Puzzel ${i+1} – ${TY[t]} (±10–15 min)`)});
 const start=()=>{if(role=='s'){if(chosen.size!=pp)return el.textContent=`Kies precies ${pp} puzzel(s).`;S.mine=[...chosen].sort((x,y)=>x-y)}begin()};
@@ -206,41 +330,49 @@ put(app,E('h2',null,'Lobby – seed '+sd),name?E('p',null,'Speler: ',E('b',null,
 role=='s'?E('p',null,`Schema: ${n} speler(s) × ${pp} = ${n*pp} puzzels. Overleg wie welke puzzels doet. Kies jouw ${pp} puzzel(s); de rest kiezen de andere spelers. Na het starten zie je alleen jouw eigen puzzels.`):E('p',null,`${n} speler(s) × ${pp} = ${n*pp} puzzels. De spelers kiezen elk ${pp} puzzel(s) op hun eigen apparaat. Daarnaast: de hoofdpuzzel (groot logigram met eindberekening).`),
 role=='s'?E('div',null,list):E('ol',null,S.pz.map(t=>E('li',null,E('b',null,TY[t]),' (±10–15 min)'))),
 role=='h'?E('p',null,'Tijd: ',E('b',null,time+' min')):null,E('button',{class:'pri',on:{click:start}},role=='h'?'Start (de tijd begint)':'Start'),el)}
-function begin(){if(S.role=='h'){S.end=Date.now()+S.time*60000;S.iv=setInterval(tick,250);host()}else play()}
+function begin(){S.started=1;if(S.role=='h'){S.end=Date.now()+S.time*60000;S.iv=setInterval(tick,250);host()}else play();save()}
 let AC=null,MUTE=false;
 function tk(h){if(MUTE)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain(),n=AC.currentTime;o.type='square';o.frequency.value=h?1300:900;g.gain.setValueAtTime(.06,n);g.gain.exponentialRampToValueAtTime(.0001,n+.05);o.connect(g);g.connect(AC.destination);o.start(n);o.stop(n+.06)}catch(e){}}
 function tick(){const t=Math.max(0,S.end-Date.now()),e=S.tmEl;if(e){e.textContent=String(t/60000|0).padStart(2,'0')+':'+String(t/1000%60|0).padStart(2,'0');e.style.color=t<300000?'var(--r)':''}
 const sec=Math.ceil(t/1000);if(t>0&&!S.over&&sec!=S.ls){S.ls=sec;tk(sec%2)}
-if(!t&&!S.over){S.over=1;clearInterval(S.iv);ov('Tijd is op')}}
-function play(){S.tabsEl=E('div');S.pv=E('div');put(app,E('div',{class:'bar'},E('span',null,S.name)),S.tabsEl,S.pv);openP(S.mine[0])}
+if(!t&&!S.over){S.over=1;S.fin='time';save();clearInterval(S.iv);ov('Tijd is op')}}
+function play(){S.tabsEl=E('div');S.pv=E('div');put(app,E('div',{class:'bar'},E('span',null,S.name)),S.tabsEl,S.pv,abortBtn());openP(S.sv&&S.sv.cur!=null?S.sv.cur:S.mine[0])}
 function tabs(){put(S.tabsEl,S.mine.map(i=>E('button',{class:'tab'+(S.cur==i?' on':''),on:{click:()=>openP(i)}},`${i+1} ${TY[S.pz[i]]}`+(S.ok[i]?' ✓':''))))}
-function openP(i){S.cur=i;tabs();const pv=S.pv;put(pv,'Puzzel wordt gemaakt…');setTimeout(()=>{if(S.pv===pv)buildP(i)},30)}
-function buildP(i){const t=S.pz[i],R=rng(S.seed*131+i*7919+1),p=S.cache[i]||(S.cache[i]=[mkSudoku,mkTect,mkMur,mkLog][t](R)),pv=S.pv,lock=!!S.ok[i];
-const done=m=>{S.ok[i]=1;put(m,somCard(i,t,p));tabs()};
+function openP(i){S.cur=i;save();tabs();const pv=S.pv;put(pv,'Puzzel wordt gemaakt…');setTimeout(()=>{if(S.pv===pv)buildP(i)},30)}
+function buildP(i){const t=S.pz[i],R=rng(S.seed*131+i*7919+1),p=S.cache[i]||(S.cache[i]=[mkSudoku,mkTect,mkLog,mkBin,mkNon,mkKil,mkSky,mkFut][t](R)),pv=S.pv,lock=!!S.ok[i];
+if(S.sv){const q=S.sv;if(q.vals&&q.vals[i]&&!p.vals)p.vals=q.vals[i];if(q.sel&&q.sel[i]&&!p.sel)p.sel=q.sel[i]}
+const done=m=>{S.ok[i]=1;save();put(m,somCard(i,t,p));tabs()},wrap=(rule,f)=>{const gr=E('div');put(pv,E('p',null,rule),gr);f(gr)};
 if(t==0){p.vals=p.vals||p.g.slice();gridUI(pv,{cols:9,vals:p.vals,fx:p.g,sol:p.sol,max:9,w:40,done,locked:lock,bd:(r,c)=>[r%3==0,c%3==2,r%3==2,c%3==0]})}
 else if(t==1){p.vals=p.vals||p.g.slice();const g=p.reg;gridUI(pv,{cols:7,vals:p.vals,fx:p.g,sol:p.sol,max:5,w:44,done,locked:lock,
 bd:(r,c)=>{const q=r*7+c;return[r==0||g[q-7]!=g[q],c==6||g[q+1]!=g[q],r==6||g[q+7]!=g[q],c==0||g[q-1]!=g[q]]}})}
-else if(t==2){p.vals=p.vals||Array(25).fill(0);const gr=E('div');
-put(pv,E('p',null,`Zet elke verdachte in de plattegrond: in elke rij en kolom staat precies één persoon. Kies een vakje en dan een letter (${NM.map(n=>n[0]+'='+n).join(', ')}).`),
-E('ul',null,p.clues.map(c=>E('li',null,c))),E('p',null,RN.map((n,k)=>E('span',{class:'leg',style:{borderLeft:`12px solid hsl(${(65+k)*50}deg 55% 65%)`}},n))),gr);
-gridUI(gr,{cols:5,vals:p.vals,sol:p.sol,max:5,w:60,done,locked:lock,sh:x=>NM[x-1][0],bg:(r,c)=>`hsl(${RM[r].charCodeAt(c)*50}deg 55% 90%)`,bd:()=>[0,0,0,0]})}
-else{const lt=E('div');put(pv,E('ol',null,p.clues.map(c=>E('li',null,c))),lt);logTable(lt,p,{done,locked:lock})}}
+else if(t==2){const lt=E('div');put(pv,E('ol',null,p.clues.map(c=>E('li',null,c))),lt);logTable(lt,p,{done,locked:lock})}
+else if(t==3){p.vals=p.vals||p.g.slice();wrap('Binairo: vul 0 en 1 in. In elke rij en kolom staan evenveel nullen als enen (drie van elk). Er staan nooit meer dan twee gelijke cijfers direct naast of onder elkaar.',gr=>gridUI(gr,{cols:6,vals:p.vals,fx:p.g,sol:p.sol,max:2,w:46,done,locked:lock,sh:x=>x-1,bd:(r,c)=>[r==0,c==5,r==5,c==0]}))}
+else if(t==4){p.vals=p.vals||Array(36).fill(0);wrap('Nonogram: kleur vakjes in. De getallen bij een rij of kolom geven de lengtes van de aaneengesloten blokken ingekleurde vakjes, in volgorde, met minstens één leeg vakje ertussen. Tik op een vakje om te kleuren of te wissen.',gr=>nonUI(gr,{vals:p.vals,rc:p.rc,cc:p.cc,done,locked:lock}))}
+else if(t==5){p.vals=p.vals||p.g.slice();const g=p.reg;wrap('Killer: zet in elk vakje een cijfer van 1 t/m 5, zodat elk cijfer in elke rij en elke kolom precies één keer staat. Het getal in de hoek van een omrand gebied is de som van de cijfers in dat gebied.',gr=>gridUI(gr,{cols:5,vals:p.vals,fx:p.g,sol:p.sol,max:5,w:56,done,locked:lock,tag:x=>p.tag[x],
+bd:(r,c)=>{const q=r*5+c;return[r==0||g[q-5]!=g[q],c==4||g[q+1]!=g[q],r==4||g[q+5]!=g[q],c==0||g[q-1]!=g[q]]}}))}
+else if(t==6){p.vals=p.vals||p.g.slice();wrap('Wolkenkrabbers: zet in elk vakje een gebouw van hoogte 1 t/m 5, zodat elke hoogte in elke rij en kolom één keer voorkomt. Het getal buiten het rooster zegt hoeveel gebouwen je vanaf die kant ziet. Hoge gebouwen verbergen lagere erachter.',gr=>gridUI(gr,{cols:7,vals:p.vals,fx:p.fx,sol:p.si,max:5,w:46,done,locked:lock,
+bd:(r,c)=>[r==1&&c>0&&c<6,c==5&&r>0&&r<6,r==5&&c>0&&c<6,c==1&&r>0&&r<6]}))}
+else{p.vals=p.vals||p.g.slice();wrap('Futoshiki: zet in elk vakje een cijfer van 1 t/m 5, zodat elk cijfer in elke rij en kolom één keer voorkomt. Het teken tussen twee vakjes wijst naar het kleinere getal: < en > naast elkaar, ∧ en ∨ boven elkaar.',gr=>gridUI(gr,{cols:9,vals:p.vals,fx:p.fx,sol:p.sol,max:5,w:38,done,locked:lock,bd:()=>[0,0,0,0]}))}}
 function row(i){const el=S.rowEls[i];let c;
 if(S.ok[i])c=E('div',null,'Antwoord ',E('input',{class:'ci',value:String(S.val[i]),readOnly:true}),' vastgelegd');
 else{const inp=E('input',{class:'ci',maxLength:4,inputMode:'numeric'});
-c=E('div',null,'Antwoord van de speler ',inp,E('button',{on:{click:()=>{if(!/^\d+$/.test(inp.value))return;S.val[i]=inp.value;S.ok[i]=1;row(i);if(S.pz.every((_,k)=>S.ok[k]))showCalc()}}},'Bevestig'))}
+c=E('div',null,'Antwoord van de speler ',inp,E('button',{on:{click:()=>{if(!/^\d+$/.test(inp.value))return;S.val[i]=inp.value;S.ok[i]=1;save();row(i);if(S.pz.every((_,k)=>S.ok[k]))showCalc()}}},'Bevestig'))}
 put(el,E('b',null,`Puzzel ${i+1} – ${TY[S.pz[i]]}`),c)}
-function showAns(){if(S.ph)return;S.ph=1;put(S.ansEl,E('h3',null,'Antwoorden van de spelers'),E('p',{class:'mu'},'Elke speler geeft nu het antwoord van de som van zijn puzzels door. Voer ze hier in. Je krijgt geen melding of een antwoord klopt. Een bevestigd antwoord staat vast. Pas als alle antwoorden zijn ingevoerd verschijnt de laatste som.'),E('div',null,S.rowEls))}
-function showCalc(){if(S.ph2)return;S.ph2=1;const b=S.big,fc=E('input',{maxLength:6,inputMode:'numeric'}),fe=E('div',{class:'err'});
-put(S.calcEl,E('h3',null,'Laatste som – kluiscode'),E('div',{class:'card'},E('p',null,'Gebruik de antwoorden van de spelers en de oplossing van de hoofdpuzzel. Voer de stappen strikt in volgorde uit. "plek van X" is het pleknummer (1–8) van X in de hoofdpuzzel. "aantal letters van X" is het aantal letters van het woord X. "mod m" betekent: de rest na deling door m.'),
+function showAns(){if(S.ph)return;S.ph=1;save();put(S.ansEl,E('h3',null,'Antwoorden van de spelers'),E('p',{class:'mu'},'Elke speler geeft nu het antwoord van de som van zijn puzzels door. Voer ze hier in. Je krijgt geen melding of een antwoord klopt. Een bevestigd antwoord staat vast. Pas als alle antwoorden zijn ingevoerd verschijnt de laatste som.'),E('div',null,S.rowEls));if(S.pz.every((_,k)=>S.ok[k]))showCalc()}
+function showCalc(){if(S.ph2)return;S.ph2=1;const b=S.big,fc=E('input',{maxLength:8,inputMode:'numeric'}),fe=E('div',{class:'err'});if(S.left==null)S.left=3;
+put(S.calcEl,E('h3',null,'Laatste som – kluiscode'),E('div',{class:'card'},E('p',null,'Reken de regels hieronder van boven naar beneden uit. Doe één regel tegelijk en schrijf de uitkomst op. Elke regel gebruikt de letter van de regel erboven.'),
+E('ul',null,E('li',null,E('b',null,'P1, P2, ...'),' zijn de antwoorden van de spelers (zie het lijstje hieronder).'),E('li',null,E('b',null,'plek van X'),' is het nummer (1 t/m 6) van de plek waar X in jullie opgeloste hoofdpuzzel staat.'),E('li',null,E('b',null,'aantal letters van X'),' is het aantal letters van dat woord, bijvoorbeeld Hond = 4.')),
 E('table',null,S.pz.map((_,i)=>E('tr',null,E('td',null,`P${i+1}`),E('td',null,S.val[i]))))),
 E('div',{class:'card'},E('table',null,b.steps.map(x=>E('tr',null,E('td',null,x))))),
-E('label',null,'Kluiscode (6 cijfers)',fc),E('button',{class:'pri',on:{click:()=>{if(fc.value==b.fin){fc.readOnly=true;S.over=1;clearInterval(S.iv);const t=Math.max(0,S.end-Date.now());ov('Ontsnapt',E('br'),`Tijd over: ${t/60000|0}:${String(t/1000%60|0).padStart(2,'0')}`)}else fe.textContent='Onjuiste kluiscode.'}}},'Bevestig'),fe)}
+E('label',null,'Cijferslot (de uitkomst van de laatste regel)',fc),E('p',{class:'mu'},'Je hebt 3 kansen.'),
+E('button',{class:'pri',on:{click:()=>{if(S.over||!fc.value)return;if(fc.value==b.fin){S.over=1;clearInterval(S.iv);fc.readOnly=true;const t=Math.max(0,S.end-Date.now());S.tl=(t/60000|0)+':'+String(t/1000%60|0).padStart(2,'0');S.fin='escaped';save();showFin()}
+else{S.left--;fc.value='';if(S.left<=0){S.over=1;clearInterval(S.iv);fc.readOnly=true;S.fin='locked';save();showFin()}else{save();fe.textContent=`Onjuiste code. Je hebt nog ${S.left} kans${S.left>1?'en':''}.`}}}}},'Bevestig'),fe);
+if(S.left<3&&S.left>0)fe.textContent=`Je hebt nog ${S.left} kans${S.left>1?'en':''}.`}
 function host(){S.tmEl=E('b');S.rowEls=S.pz.map(()=>E('div',{class:'card'}));S.ansEl=E('div');S.calcEl=E('div');const big=E('div',{class:'mu'},'Bezig met genereren…');
 put(app,E('div',{class:'bar'},E('span',null,'Hoofdpuzzel'),E('span',null,E('button',{on:{click:e=>{MUTE=!MUTE;e.target.textContent=MUTE?'Geluid aan':'Geluid uit'}}},'Geluid uit'),'Resterende tijd ',S.tmEl)),
-E('h3',null,'Hoofdpuzzel – extreem moeilijk logigram'),big,S.ansEl,S.calcEl);S.pz.forEach((_,i)=>row(i));
-const sv=S;setTimeout(()=>{if(S!==sv)return;const b=mkBig(rng(S.seed*131+99991),S.pz.length),bt=E('div');S.big=b;big.className='';
-put(big,E('div',{class:'card'},'Zeven categorieën met elk acht items. Plek 1 staat links en plek 8 rechts. Elk item hoort bij precies één plek. Zoek bij elke plek het juiste item. Rond de puzzel pas af als je zeker bent: daarna volgen de antwoorden van de spelers en de laatste som.'),E('ol',null,b.clues.map(c=>E('li',null,c))),bt);
-logTable(bt,b,{done:m=>{put(m,'Hoofdpuzzel afgerond.');showAns()}})},40)}
-uitleg();
+E('h3',null,'Hoofdpuzzel – groot logigram'),big,S.ansEl,S.calcEl,abortBtn());S.pz.forEach((_,i)=>row(i));
+const sv=S;setTimeout(()=>{if(S!==sv)return;const b=mkBig(rng(S.seed*131+99991),S.pz.length),bt=E('div');S.big=b;if(S.sv&&S.sv.bigSel)b.sel=S.sv.bigSel;big.className='';
+put(big,E('div',{class:'card'},'Vijf categorieën (plek, naam, beroep, kleur en huisdier) met elk zes items. Plek 1 staat links en plek 6 rechts. Elk item hoort bij precies één plek. Zoek bij elke plek het juiste item. Reken op 10 tot 15 minuten. Rond de puzzel pas af als je zeker bent: daarna volgen de antwoorden van de spelers en de laatste som.'),E('ol',null,b.clues.map(c=>E('li',null,c))),bt);
+logTable(bt,b,{locked:!!(S.sv&&S.sv.ph),done:m=>{put(m,'Hoofdpuzzel afgerond.');showAns()}})},40)}
+(function(){let d=null;try{d=loadSave()}catch(e){}if(d)resume(d);else{let seen=false;try{seen=!!localStorage.getItem(KS)}catch(e){}seen?home():uitleg()}})();
 </script></body></html>
