@@ -20,7 +20,7 @@ button:hover{border-color:var(--a)}button:active{background:#eef2f9}
 .pad{text-align:center}.pad button{min-width:44px;height:42px;margin:2px;padding:0 10px}
 .bar{position:sticky;top:0;background:var(--bg);padding:10px 0;z-index:5;display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--mu);border-bottom:1px solid var(--l);margin-bottom:14px}
 .bar b{font-size:22px;color:var(--t);letter-spacing:0;font-variant-numeric:tabular-nums}
-.ov{position:fixed;inset:0;background:#f5f6f8f7;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:1.6em;font-weight:600;text-align:center;z-index:9;color:var(--a)}
+.ov{position:fixed;inset:0;background:#f5f6f8f7;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;overflow:auto;padding:30px 18px;font-size:1.6em;font-weight:600;text-align:center;z-index:9;color:var(--a)}
 .code{color:var(--g);font-size:1.3em;font-variant-numeric:tabular-nums}table{border-collapse:collapse;width:100%}td,th{padding:6px;text-align:left;border-bottom:1px solid var(--l)}
 ul,ol{padding-left:22px}li{margin:3px 0}#msg{margin-top:10px;font-weight:600}
 .mu{color:var(--mu);font-size:14px}.err{color:var(--r);font-weight:600}.lg select{padding:6px 2px;font-size:13px}.lg td,.lg th{padding:4px 2px;border:0}.lg th{font-size:12px;color:var(--mu);font-weight:600}select:disabled,input:read-only{background:#f1f3f7;color:var(--t)}
@@ -42,14 +42,14 @@ const PM=[];(function pm(a,r){if(!r.length){PM.push(a);return}r.forEach((v,i)=>p
 function mkSudoku(R){const ok=(g,p,v)=>{const r=p/9|0,c=p%9,br=r-r%3,bc=c-c%3;for(let k=0;k<9;k++)if(g[r*9+k]==v||g[k*9+c]==v||g[(br+(k/3|0))*9+bc+k%3]==v)return 0;return 1};
 const cd=(g,p)=>{const o=[];for(let v=1;v<10;v++)if(ok(g,p,v))o.push(v);return o};
 const sol=Array(81).fill(0);ds(sol,cd,1,R);const g=sol.slice();let k=0;
-for(const p of shuf([...Array(81).keys()],R)){if(k>=46)break;const v=g[p];g[p]=0;if(ds(g.slice(),cd,2)==1)k++;else g[p]=v}return{sol,g}}
+for(const p of shuf([...Array(81).keys()],R)){if(k>=34)break;const v=g[p];g[p]=0;if(ds(g.slice(),cd,2)==1)k++;else g[p]=v}return{sol,g}}
 function mkTect(R){const W=7,H=7,n=49;for(;;){const reg=Array(n).fill(-1);let nr=0;
 for(const s of shuf([...Array(n).keys()],R)){if(reg[s]>=0)continue;const id=nr++;reg[s]=id;const cl=[s],t=2+(R()*4|0);
 while(cl.length<t){const f=[];cl.forEach(c=>nb(c,W,H,0).forEach(d=>{if(reg[d]<0)f.push(d)}));if(!f.length)break;const d=f[R()*f.length|0];reg[d]=id;cl.push(d)}}
 const sz=Array(nr).fill(0);reg.forEach(r=>sz[r]++);const nbs=[...Array(n).keys()].map(i=>nb(i,W,H,1));
 const cd=(g,i)=>{const o=[];for(let v=1;v<=sz[reg[i]];v++)if(!nbs[i].some(j=>g[j]==v)&&!g.some((x,j)=>x==v&&reg[j]==reg[i]))o.push(v);return o};
 const sol=Array(n).fill(0);if(!ds(sol,cd,1,R))continue;const g=sol.slice();let k=0;
-for(const p of shuf([...Array(n).keys()],R)){if(k>=33)break;const v=g[p];g[p]=0;if(ds(g.slice(),cd,2)==1)k++;else g[p]=v}
+for(const p of shuf([...Array(n).keys()],R)){if(k>=26)break;const v=g[p];g[p]=0;if(ds(g.slice(),cd,2)==1)k++;else g[p]=v}
 return{reg,sol,g}}}
 const NM=['Anna','Bram','Cas','Dora','Eli'];
 const latOK=(g,p,v,N)=>{const r=p/N|0,c=p%N;for(let k=0;k<N;k++)if(g[r*N+k]==v||g[k*N+c]==v)return 0;return 1};
@@ -59,7 +59,7 @@ for(let v=1;v<3;v++){let a=0,b=0;for(let k=0;k<N;k++){if(k!=c&&g[r*N+k]==v)a++;i
 let bad=0;for(let s=-2;s<=0;s++){let h=0,w=0;for(let q=0;q<3;q++){const x=c+s+q,y=r+s+q;if(x==c||(x>=0&&x<N&&g[r*N+x]==v))h++;if(y==r||(y>=0&&y<N&&g[y*N+c]==v))w++}if(h==3||w==3)bad=1}
 if(!bad)o.push(v)}return o};
 const sol=Array(n).fill(0);ds(sol,cd,1,R);const g=sol.slice();let k=0;
-for(const p of shuf([...Array(n).keys()],R)){if(k>=20)break;const v=g[p];g[p]=0;if(ds(g.slice(),cd,2)==1)k++;else g[p]=v}return{sol,g}}
+for(const p of shuf([...Array(n).keys()],R)){if(k>=15)break;const v=g[p];g[p]=0;if(ds(g.slice(),cd,2)==1)k++;else g[p]=v}return{sol,g}}
 function mkNon(R){const N=6,runs=a=>{const o=[];let k=0;for(const x of a){if(x)k++;else if(k){o.push(k);k=0}}if(k)o.push(k);return o},eq=(a,b)=>a.length==b.length&&a.every((x,i)=>x==b[i]);
 const masks=[...Array(1<<N).keys()].map(m=>[...Array(N).keys()].map(i=>m>>i&1));
 for(;;){const sol=[...Array(N*N)].map(()=>R()<.55?1:0),row=r=>sol.slice(r*N,r*N+N),col=c=>[...Array(N).keys()].map(r=>sol[r*N+c]);
@@ -79,7 +79,7 @@ for(let v=1;v<=N;v++)if(latOK(g,p,v,N)&&s+v+e<=T&&s+v+N*e>=T)o.push(v);return o}
 const g=Array(n).fill(0);let tr=0;
 while(ds(g.slice(),cd,2)!=1&&tr++<12){const e=[...Array(n).keys()].filter(i=>!g[i]);const p=e[R()*e.length|0];g[p]=sol[p]}
 if(ds(g.slice(),cd,2)!=1)continue;
-for(const p of shuf([...Array(n).keys()],R)){if(!g[p])continue;const v=g[p];g[p]=0;if(ds(g.slice(),cd,2)!=1)g[p]=v}
+for(const p of shuf([...Array(n).keys()],R)){if(!g[p]||R()<.4)continue;const v=g[p];g[p]=0;if(ds(g.slice(),cd,2)!=1)g[p]=v}
 const tag=Array(n).fill('');cages.forEach((l,k)=>{tag[Math.min(...l)]=String(tg[k])});
 return{reg,tag,sol,g}}}
 function mkSky(R){const N=5,n=25,vis=a=>{let m=0,c=0;for(const x of a)if(x>m){m=x;c++}return c},row=(g,r)=>g.slice(r*N,r*N+N),col=(g,c)=>[...Array(N).keys()].map(r=>g[r*N+c]);
@@ -91,8 +91,8 @@ const cw=col(g,cc);if(ok&&cw.every(x=>x)&&((c.T[cc]&&vis(cw)!=c.T[cc])||(c.B[cc]
 const g=Array(n).fill(0),un=()=>ds(g.slice(),mk(cl),2)==1;let tr=0;
 while(!un()&&tr++<12){const e=[...Array(n).keys()].filter(i=>!g[i]);const p=e[R()*e.length|0];g[p]=sol[p]}
 const keys=[];['L','R','T','B'].forEach(s=>{for(let k=0;k<N;k++)keys.push([s,k])});const t0=performance.now();let left=keys.length;
-for(const [s,k] of shuf(keys,R)){if(left<=9||performance.now()-t0>3000)break;const v=cl[s][k];cl[s][k]=0;if(un())left--;else cl[s][k]=v}
-for(const p of shuf([...Array(n).keys()],R)){if(!g[p]||performance.now()-t0>3500)continue;const v=g[p];g[p]=0;if(!un())g[p]=v}
+for(const [s,k] of shuf(keys,R)){if(left<=14||performance.now()-t0>3000)break;const v=cl[s][k];cl[s][k]=0;if(un())left--;else cl[s][k]=v}
+for(const p of shuf([...Array(n).keys()],R)){if(!g[p]||R()<.5||performance.now()-t0>3500)continue;const v=g[p];g[p]=0;if(!un())g[p]=v}
 const G=Array(49).fill(0),F=Array(49).fill(true);
 for(let r=0;r<N;r++)for(let c=0;c<N;c++){const q=(r+1)*7+c+1;G[q]=g[r*N+c];F[q]=!!g[r*N+c]}
 for(let k=0;k<N;k++){G[k+1]=cl.T[k];G[42+k+1]=cl.B[k];G[(k+1)*7]=cl.L[k];G[(k+1)*7+6]=cl.R[k]}
@@ -104,7 +104,7 @@ return(g,p)=>{const o=[];for(let v=1;v<=N;v++){if(!latOK(g,p,v,N))continue;let o
 let cons=all.slice();const g=Array(n).fill(0),un=()=>ds(g.slice(),mk(cons),2)==1;let tr=0;
 while(!un()&&tr++<12){const e=[...Array(n).keys()].filter(i=>!g[i]);const p=e[R()*e.length|0];g[p]=sol[p]}
 const t0=performance.now(),pool=shuf([...cons.map(k=>({k})),...[...Array(n).keys()].filter(i=>g[i]).map(p=>({p}))],R);
-for(const it of pool){if(performance.now()-t0>3500)break;if(it.k){const old=cons;cons=cons.filter(x=>x!==it.k);if(!un())cons=old}else{const v=g[it.p];g[it.p]=0;if(!un())g[it.p]=v}}
+for(const it of pool){if(performance.now()-t0>3500)break;if(R()<.4)continue;if(it.k){const old=cons;cons=cons.filter(x=>x!==it.k);if(!un())cons=old}else{const v=g[it.p];g[it.p]=0;if(!un())g[it.p]=v}}
 const G=Array(81).fill(0),F=Array(81).fill(true),SL=Array(81).fill(0);
 for(let r=0;r<N;r++)for(let c=0;c<N;c++){const q=2*r*9+2*c;G[q]=g[r*N+c];F[q]=!!g[r*N+c];SL[q]=sol[r*N+c]}
 cons.forEach(k=>{const {a,b}=k,m=Math.min(a,b),r=m/N|0,c=m%N;if(Math.abs(a-b)==1)G[2*r*9+2*c+1]=a<b?'<':'>';else G[(2*r+1)*9+2*c]=a<b?'∧':'∨'});
@@ -118,8 +118,8 @@ if(!f(sa,sb,sc))continue;let n=0;for(let q=0;q<L;q++)if(f(X[q],Y[q],Z[q]))n++;if
 let w=0;for(let q=0;q<L;q++)if(f(X[q],Y[q],Z[q])){X[w]=X[q];Y[w]=Y[q];Z[w]=Z[q];w++}L=w;
 const A=C[k][i],B=C[l][j];clues.push(ty==0?`${A} hoort bij ${B}`:ty==1?`${A} hoort niet bij ${B}`:ty==2?`${A} en ${B} staan direct naast elkaar`:`${A} staat (ergens) links van ${B}`)}
 return{C,CN:['Naam','Beroep','Kleur'],clues,sol:[PM[sa],PM[sb],PM[sc]]}}
-function mkBig(R,n){const K=5,M=6,NV=K*M,CN=['Naam','Beroep','Kleur','Huisdier'],
-C=[['Plek 1','Plek 2','Plek 3','Plek 4','Plek 5','Plek 6'],['Anna','Bram','Cas','Dora','Eli','Fenna'],['Bakker','Arts','Piloot','Kok','Chauffeur','Leraar'],['Rood','Blauw','Groen','Geel','Wit','Zwart'],['Hond','Kat','Vogel','Vis','Konijn','Slang']];
+function mkBig(R,n){const K=4,M=5,NV=K*M,CN=['Naam','Beroep','Kleur'],
+C=[['Plek 1','Plek 2','Plek 3','Plek 4','Plek 5'],['Anna','Bram','Cas','Dora','Eli'],['Bakker','Arts','Piloot','Kok','Chauffeur'],['Rood','Blauw','Groen','Geel','Wit']];
 const sol=C.map((_,k)=>k?shuf([...Array(M).keys()],R):[...Array(M).keys()]);
 const P=v=>sol[(v/M)|0][v%M],lab=v=>C[(v/M)|0][v%M],al=(t,a,b)=>t==0?a==b:t==1?a!=b:t==2?Math.abs(a-b)==1:t==3?a<b:t==4?Math.abs(a-b)!=1:Math.abs(a-b)==2;
 const pc=x=>{let c=0;while(x){x&=x-1;c++}return c};
@@ -133,26 +133,26 @@ for(const c of adj[b]){if(!ok)break;const a=c.a==b,y=a?c.b:c.a;let m=0;for(let q
 if(ok)n+=rec(d,dn,lim-n)}return n}
 return rec(dom,new Uint8Array(NV),lim)}
 const cons=[],seen=new Set();
-const add=()=>{const k=R()*K|0,l=R()*K|0;if(k==l)return 0;const a=k*M+(R()*M|0),b=l*M+(R()*M|0);let t=[0,1,1,2,3,3,4,4,5][R()*9|0];if(!k||!l)t&=1;
+const add=()=>{const k=R()*K|0,l=R()*K|0;if(k==l)return 0;const a=k*M+(R()*M|0),b=l*M+(R()*M|0);let t=[0,0,1,2,2,3,3][R()*7|0];if(!k||!l)t&=1;
 if(!al(t,P(a),P(b)))return 0;const key=a+','+b+','+t;if(seen.has(key))return 0;seen.add(key);cons.push({a,b,t});return 1};
 let g=0,uq=0;while(g++<40&&!uq){for(let j=0;j<10;)j+=add();uq=count(cons,2)==1}
 if(!uq)for(let v=M;v<NV;v++)cons.push({a:v,b:P(v),t:0});
-const t0=performance.now(),rem=[];for(const c of shuf(cons,R)){if(performance.now()-t0>4000)break;const i=cons.indexOf(c);cons.splice(i,1);if(count(cons,2)!=1)cons.splice(i,0,c);else rem.push(c)}shuf(rem,R).slice(0,4).forEach(c=>cons.push(c));
+const t0=performance.now(),rem=[];for(const c of shuf(cons,R)){if(performance.now()-t0>4000)break;const i=cons.indexOf(c);cons.splice(i,1);if(count(cons,2)!=1)cons.splice(i,0,c);else rem.push(c)}shuf(rem,R).slice(0,10).forEach(c=>cons.push(c));
 const tx=c=>{const A=lab(c.a),B=lab(c.b);return[`${A} hoort bij ${B}`,`${A} hoort niet bij ${B}`,`${A} en ${B} staan direct naast elkaar`,`${A} staat links van ${B} (niet per se direct)`,`${A} en ${B} staan niet direct naast elkaar`,`${A} en ${B} staan met precies één plek ertussen`][c.t]};
 const clues=shuf(cons,R).map(tx);
 const base=[];for(let j=0;j<n;j++)base.push({l:`P${j+1}`,v:codeOf(j)});
 const vs=shuf([...Array(NV-M).keys()].map(x=>x+M),R);
-vs.slice(0,8).forEach(v=>base.push({l:`plek van ${lab(v)}`,v:P(v)+1}));
-vs.slice(8,13).forEach(v=>base.push({l:`aantal letters van ${lab(v)}`,v:lab(v).length}));
+vs.slice(0,4).forEach(v=>base.push({l:`plek van ${lab(v)}`,v:P(v)+1}));
+vs.slice(4,6).forEach(v=>base.push({l:`aantal letters van ${lab(v)}`,v:lab(v).length}));
 const B=shuf(base,R),st=[],nmOf=i=>i<26?String.fromCharCode(65+i):String.fromCharCode(64+(i/26|0))+String.fromCharCode(65+i%26);
-let acc=B[0].v,nm=B[0].l,mul=0;
-for(let i=1;i<B.length;i++){const L=nmOf(i-1),b=B[i];let s;
-if(b.v<10&&acc*b.v<=3000&&mul++%2==0){acc=acc*b.v;s=`${L} = ${nm} × ${b.l}`}
-else if(b.v<acc&&R()<.3){acc=acc-b.v;s=`${L} = ${nm} − ${b.l}`}
-else{acc=acc+b.v;s=`${L} = ${nm} + ${b.l}`}
-st.push(s);nm=L}
+let acc=B[0].v,nm=B[0].l,mul=0;const ev=[];
+for(let i=1;i<B.length;i++){const L=nmOf(i-1),b=B[i],pv=acc;let s,op;
+if(b.v<10&&acc*b.v<=3000&&mul++%2==0){acc=acc*b.v;op='×';s=`${L} = ${nm} × ${b.l}`}
+else if(b.v<acc&&R()<.3){acc=acc-b.v;op='−';s=`${L} = ${nm} − ${b.l}`}
+else{acc=acc+b.v;op='+';s=`${L} = ${nm} + ${b.l}`}
+ev.push(`${pv} ${op} ${b.v} = ${acc}`);st.push(s);nm=L}
 st.push(`Kluiscode = ${nm}`);
-return{C,CN,clues,sol:sol.slice(1),steps:st,fin:String(acc)}}
+return{C,CN,clues,sol:sol.slice(1),steps:st,ev,facts:B.map(x=>`${x.l} = ${x.v}`),fin:String(acc)}}
 /* ---------- veilige DOM-helpers (geen innerHTML) ---------- */
 const E=(t,a,...k)=>{const e=document.createElement(t);for(const x in a||{}){const v=a[x];
 if(x=='class')e.className=v;else if(x=='on')for(const ev in v)e.addEventListener(ev,v[ev]);else if(x=='style')Object.assign(e.style,v);else e[x]=v}
@@ -216,12 +216,23 @@ function loadSave(){try{const d=JSON.parse(localStorage.getItem(KEY)||'null');re
 function showFin(){const f=S.fin;if(f=='time')ov('Tijd is op');else if(f=='locked')ov('Het cijferslot zit vast',E('br'),'Je 3 kansen zijn op.');else if(f=='escaped')ov('Ontsnapt',E('br'),'Tijd over: '+S.tl)}
 function resume(d){S={role:d.role,n:d.n,pp:d.pp,seed:d.seed,time:d.time,end:d.end,name:d.name,mine:d.mine||[],ok:d.ok||{},val:d.val||{},cache:{},kl:{},sv:d,started:1,left:d.left,fin:d.fin,tl:d.tl,ph:0,cur:d.cur};
 S.pz=schema(S.seed,S.n,S.pp);if(S.fin)S.over=1;else if(S.role=='h')S.iv=setInterval(tick,250);
-S.role=='h'?host():play();if(S.fin)showFin()}
+S.role=='h'?host():play();if(S.fin)(function w(){(S.role!='h'||S.big)?showFin():setTimeout(w,200)})()}
 function abortBtn(){return E('div',{style:{marginTop:'28px',textAlign:'center'}},E('button',{on:{click:e=>{if(e.target.dataset.s)home();else{e.target.dataset.s='1';e.target.textContent='Zeker weten? Klik nog een keer om het spel te stoppen'}}}},'Spel stoppen'))}
 
 // Tijden gelden voor 2 puzzels per persoon; de echte tijd schaalt mee met "puzzels per persoon".
 const TIJDEN=[[20,'Supersnel'],[30,'Extreem'],[40,'Moeilijk'],[50,'Normaal'],[60,'Makkelijk'],[75,'Rustig'],[90,'Heel rustig'],[120,'Ontspannen']];
-const ov=(...k)=>app.append(E('div',{class:'ov'},k,E('button',{on:{click:home}},'Opnieuw')));
+const ov=(...k)=>app.append(E('div',{class:'ov'},E('div',null,k),S.role=='h'?sol():null,E('button',{on:{click:home}},'Opnieuw')));
+/* ---------- einduitslag: juiste antwoorden en stappen ---------- */
+function sol(){const b=S.big;if(!b)return null;
+return E('div',{class:'card',style:{fontSize:'15px',fontWeight:'400',textAlign:'left',width:'100%',maxWidth:'560px',color:'var(--t)',marginTop:'20px'}},
+E('h3',null,'Juiste antwoorden van de spelers'),
+E('table',null,S.pz.map((t,i)=>E('tr',null,E('td',null,`P${i+1} ${TY[t]}`),E('td',null,'Juist: ',E('b',null,codeOf(i))),E('td',null,S.val[i]==null?'niet ingevoerd':'Ingevoerd: '+S.val[i]+(String(S.val[i])==String(codeOf(i))?' ✓':' ✗'))))),
+E('h3',null,'Oplossing hoofdpuzzel'),
+E('table',{class:'pt'},E('tr',null,E('th'),b.C[0].map(x=>E('th',null,x))),b.CN.map((n,k)=>E('tr',null,E('th',null,n),b.C[0].map((_,r)=>E('td',null,b.C[k+1][b.sol[k].indexOf(r)]))))),
+E('h3',null,'Waarden die je nodig had'),E('p',null,b.facts.join(' · ')),
+E('h3',null,'Stappen van de laatste som'),
+E('ol',null,b.steps.slice(0,-1).map((s,i)=>E('li',null,s+'  →  '+b.ev[i]))),
+E('p',null,E('b',null,'Juiste kluiscode: '+b.fin)))}
 /* ---------- uitleg ---------- */
 function mg(rows,bs){const n=rows.length,w=rows[0].length;return E('div',{class:'grid',style:{gridTemplateColumns:`repeat(${w},1fr)`,maxWidth:w*40+'px'}},rows.flat().map((x,i)=>{const r=(i/w|0),c=i%w;
 return E('div',{class:'cell'+(x[0]=='*'?' fx':''),style:{borderWidth:[r%bs==0,c%bs==bs-1,r%bs==bs-1,c%bs==0].map(z=>z?'3px':'1px').join(' ')}},x==='.'?'':String(x).replace('*',''))}))}
@@ -245,13 +256,13 @@ E('p',null,'Het spel wordt automatisch bewaard. Ververs je de pagina per ongeluk
 sec('2. Stap voor stap: zo verloopt het spel',st(
 [E('b',null,'Kies een rol. '),'Eén apparaat is de ',E('b',null,'Hoofdpuzzel'),' (de host). Alle andere apparaten zijn ',E('b',null,'Oplossers'),'. Vul overal precies hetzelfde in: aantal spelers, puzzels per persoon en seed. De host kiest ook de tijd.'],
 [E('b',null,'Verdeel de puzzels. '),'In de lobby staat een lijst met alle puzzels. Overleg wie welke puzzels doet. Iedere speler kiest precies zijn eigen aantal puzzels. Elke puzzel wordt door één speler gedaan.'],
-[E('b',null,'Start. '),'De host drukt op Start. Dan begint de klok. Alleen de host heeft een klok, de oplossers spelen zonder klok.'],
+[E('b',null,'Start. '),'De host drukt op Start. Dan begint de klok. Alleen de host heeft een klok, de oplossers spelen zonder klok. Is de tijd op, dan gaat er een alarm af.'],
 [E('b',null,'Los je puzzels op. '),'Als je klaar bent, druk je op ',E('b',null,'Puzzel afronden'),'. Je krijgt de vraag of je het zeker weet. Na ',E('b',null,'Ja'),' kun je niets meer veranderen. Je hoort niet of de puzzel goed of fout is.'],
 [E('b',null,'Reken de som van je puzzel uit. '),'Direct na het afronden krijg je een som met een paar stappen. Die kun je alleen uitrekenen als je puzzel goed is opgelost. Schrijf het antwoord op en houd het bij je.'],
-[E('b',null,'De host lost de hoofdpuzzel op. '),'Dat is een groot logigram, een tandje moeilijker dan het gewone logigram. Reken op 10 tot 15 minuten. Klaar? Dan drukt de host op Puzzel afronden.'],
+[E('b',null,'De host lost de hoofdpuzzel op. '),'Dat is een groot logigram, een tandje moeilijker dan het gewone logigram. Reken op ongeveer 10 minuten. Klaar? Dan drukt de host op Puzzel afronden.'],
 [E('b',null,'Antwoorden doorgeven. '),'Zodra de hoofdpuzzel is afgerond, geeft elke speler zijn antwoorden door. De host voert ze in. Je krijgt geen melding of een antwoord klopt.'],
 [E('b',null,'De laatste som. '),'Als alle antwoorden zijn ingevoerd, verschijnt de laatste som. Reken die van boven naar beneden uit. De uitkomst van de laatste regel is de code voor het cijferslot.'],
-[E('b',null,'Cijferslot. '),'Voer de code in. Je hebt 3 kansen. Klopt de code, dan zijn jullie ontsnapt. Is de tijd op, of zijn de 3 kansen gebruikt, dan niet.'])),
+[E('b',null,'Cijferslot. '),'Voer de code in. Je hebt 3 kansen. Klopt de code, dan zijn jullie ontsnapt. Is de tijd op, of zijn de 3 kansen gebruikt, dan niet. Aan het einde toont de host de juiste antwoorden en alle stappen.'])),
 sec('3. Sudoku',E('p',null,E('b',null,'Regel: '),'Zet in elk leeg vakje een cijfer, zodat in elke rij, elke kolom en elk dik omlijnd blok alle cijfers precies één keer voorkomen. In het spel is het een rooster van 9×9 met cijfers 1 t/m 9 en blokken van 3×3. Hier zie je een klein voorbeeld van 4×4 met cijfers 1 t/m 4 en blokken van 2×2.'),
 ex(E('b',null,'Voorbeeld'),figs([pic([['*1','~','~','*4'],['','*4','*1',''],['*2','','*4',''],['','*3','','*1']],{bd:sb}),'Begin. Blauw staat al vast. De gele vakjes lossen we eerst op.'],[pic([['*1','+2','+3','*4'],['+3','*4','*1','+2'],['*2','+1','*4','+3'],['+4','*3','+2','*1']],{bd:sb}),'Opgelost. Groen heb je zelf ingevuld.']),
 st('Kijk naar het blok linksboven. Daar staan al een 1 en een 4. De lege vakjes in dat blok zijn dus 2 en 3.','Kijk naar kolom 2. Daar staan al een 4 en een 3. Het gele vakje bovenaan kolom 2 kan dus geen 3 zijn en wordt een 2.','Rij 1 heeft nu 1, 2 en 4. Het laatste gele vakje is dus 3.','Zo ga je door: zoek steeds een vakje waar maar één cijfer past.')),
@@ -295,7 +306,7 @@ sec('12. De laatste som',E('p',null,'Als alle spelers hun antwoord hebben doorge
 ex(E('b',null,'Voorbeeld'),E('p',null,'Antwoorden: P1 = 45 en P2 = 62. In de hoofdpuzzel staat Hond op plek 3. Het woord Kat heeft 3 letters.'),
 tb([['Regel','Uitrekenen'],['A = P1 + P2','45 + 62 = 107'],['B = A × plek van Hond','107 × 3 = 321'],['C = B − aantal letters van Kat','321 − 3 = 318'],['Kluiscode = C','318']]),
 E('p',null,'De code is dus 318. In het echte spel zijn er meer regels, maar ze zijn allemaal zo simpel.')),
-E('ul',null,E('li',null,E('b',null,'plek van X'),': zoek X in jullie opgeloste hoofdpuzzel en kijk bij welke plek (1 t/m 6) het staat.'),E('li',null,E('b',null,'aantal letters van X'),': tel de letters van het woord.')),
+E('ul',null,E('li',null,E('b',null,'plek van X'),': zoek X in jullie opgeloste hoofdpuzzel en kijk bij welke plek (1 t/m 5) het staat.'),E('li',null,E('b',null,'aantal letters van X'),': tel de letters van het woord.')),
 tip('Schrijf na elke regel de uitkomst op. Controleer elke regel twee keer, want één fout maakt de code fout.')),
 sec('13. Tips',tip(E('b',null,'Gebruik kladpapier. '),'Schrijf aanwijzingen en tussenstappen op.'),
 tip(E('b',null,'Geen rekenmachine. '),'Alle sommen zijn zo gemaakt dat je ze zelf kunt doen.'),
@@ -324,18 +335,19 @@ S={role,n,pp,seed:+sd,time,ok:{},val:{},cache:{},kl:{},name,mine:[]};
 // willekeurig schema per seed; elk type komt minstens één keer voor (als er 4+ puzzels zijn)
 S.pz=schema(S.seed,n,pp);
 const chosen=new Set(),el=E('div',{class:'err'});
-const list=S.pz.map((t,i)=>{const cb=E('input',{type:'checkbox',on:{change:()=>{if(cb.checked&&chosen.size>=pp){cb.checked=false;el.textContent=`Je kunt maar ${pp} puzzel(s) kiezen.`;return}el.textContent='';cb.checked?chosen.add(i):chosen.delete(i)}}});return E('label',{class:'pk'},cb,`Puzzel ${i+1} – ${TY[t]} (±10–15 min)`)});
+const list=S.pz.map((t,i)=>{const cb=E('input',{type:'checkbox',on:{change:()=>{if(cb.checked&&chosen.size>=pp){cb.checked=false;el.textContent=`Je kunt maar ${pp} puzzel(s) kiezen.`;return}el.textContent='';cb.checked?chosen.add(i):chosen.delete(i)}}});return E('label',{class:'pk'},cb,`Puzzel ${i+1} – ${TY[t]} (max. 20 min)`)});
 const start=()=>{if(role=='s'){if(chosen.size!=pp)return el.textContent=`Kies precies ${pp} puzzel(s).`;S.mine=[...chosen].sort((x,y)=>x-y)}begin()};
 put(app,E('h2',null,'Lobby – seed '+sd),name?E('p',null,'Speler: ',E('b',null,name)):null,
 role=='s'?E('p',null,`Schema: ${n} speler(s) × ${pp} = ${n*pp} puzzels. Overleg wie welke puzzels doet. Kies jouw ${pp} puzzel(s); de rest kiezen de andere spelers. Na het starten zie je alleen jouw eigen puzzels.`):E('p',null,`${n} speler(s) × ${pp} = ${n*pp} puzzels. De spelers kiezen elk ${pp} puzzel(s) op hun eigen apparaat. Daarnaast: de hoofdpuzzel (groot logigram met eindberekening).`),
-role=='s'?E('div',null,list):E('ol',null,S.pz.map(t=>E('li',null,E('b',null,TY[t]),' (±10–15 min)'))),
+role=='s'?E('div',null,list):E('ol',null,S.pz.map(t=>E('li',null,E('b',null,TY[t]),' (max. 20 min)'))),
 role=='h'?E('p',null,'Tijd: ',E('b',null,time+' min')):null,E('button',{class:'pri',on:{click:start}},role=='h'?'Start (de tijd begint)':'Start'),el)}
 function begin(){S.started=1;if(S.role=='h'){S.end=Date.now()+S.time*60000;S.iv=setInterval(tick,250);host()}else play();save()}
 let AC=null,MUTE=false;
 function tk(h){if(MUTE)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain(),n=AC.currentTime;o.type='square';o.frequency.value=h?1300:900;g.gain.setValueAtTime(.06,n);g.gain.exponentialRampToValueAtTime(.0001,n+.05);o.connect(g);g.connect(AC.destination);o.start(n);o.stop(n+.06)}catch(e){}}
+function alarm(){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();AC.resume();let n=0;const iv=setInterval(()=>{const o=AC.createOscillator(),g=AC.createGain(),t=AC.currentTime;o.type='sawtooth';o.frequency.value=n%2?660:880;g.gain.setValueAtTime(.2,t);g.gain.exponentialRampToValueAtTime(.0001,t+.35);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+.4);if(navigator.vibrate)navigator.vibrate(300);if(++n>=24)clearInterval(iv)},400)}catch(e){}}
 function tick(){const t=Math.max(0,S.end-Date.now()),e=S.tmEl;if(e){e.textContent=String(t/60000|0).padStart(2,'0')+':'+String(t/1000%60|0).padStart(2,'0');e.style.color=t<300000?'var(--r)':''}
 const sec=Math.ceil(t/1000);if(t>0&&!S.over&&sec!=S.ls){S.ls=sec;tk(sec%2)}
-if(!t&&!S.over){S.over=1;S.fin='time';save();clearInterval(S.iv);ov('Tijd is op')}}
+if(!t&&!S.over){S.over=1;S.fin='time';save();clearInterval(S.iv);alarm();showFin()}}
 function play(){S.tabsEl=E('div');S.pv=E('div');put(app,E('div',{class:'bar'},E('span',null,S.name)),S.tabsEl,S.pv,abortBtn());openP(S.sv&&S.sv.cur!=null?S.sv.cur:S.mine[0])}
 function tabs(){put(S.tabsEl,S.mine.map(i=>E('button',{class:'tab'+(S.cur==i?' on':''),on:{click:()=>openP(i)}},`${i+1} ${TY[S.pz[i]]}`+(S.ok[i]?' ✓':''))))}
 function openP(i){S.cur=i;save();tabs();const pv=S.pv;put(pv,'Puzzel wordt gemaakt…');setTimeout(()=>{if(S.pv===pv)buildP(i)},30)}
@@ -361,7 +373,7 @@ put(el,E('b',null,`Puzzel ${i+1} – ${TY[S.pz[i]]}`),c)}
 function showAns(){if(S.ph)return;S.ph=1;save();put(S.ansEl,E('h3',null,'Antwoorden van de spelers'),E('p',{class:'mu'},'Elke speler geeft nu het antwoord van de som van zijn puzzels door. Voer ze hier in. Je krijgt geen melding of een antwoord klopt. Een bevestigd antwoord staat vast. Pas als alle antwoorden zijn ingevoerd verschijnt de laatste som.'),E('div',null,S.rowEls));if(S.pz.every((_,k)=>S.ok[k]))showCalc()}
 function showCalc(){if(S.ph2)return;S.ph2=1;const b=S.big,fc=E('input',{maxLength:8,inputMode:'numeric'}),fe=E('div',{class:'err'});if(S.left==null)S.left=3;
 put(S.calcEl,E('h3',null,'Laatste som – kluiscode'),E('div',{class:'card'},E('p',null,'Reken de regels hieronder van boven naar beneden uit. Doe één regel tegelijk en schrijf de uitkomst op. Elke regel gebruikt de letter van de regel erboven.'),
-E('ul',null,E('li',null,E('b',null,'P1, P2, ...'),' zijn de antwoorden van de spelers (zie het lijstje hieronder).'),E('li',null,E('b',null,'plek van X'),' is het nummer (1 t/m 6) van de plek waar X in jullie opgeloste hoofdpuzzel staat.'),E('li',null,E('b',null,'aantal letters van X'),' is het aantal letters van dat woord, bijvoorbeeld Hond = 4.')),
+E('ul',null,E('li',null,E('b',null,'P1, P2, ...'),' zijn de antwoorden van de spelers (zie het lijstje hieronder).'),E('li',null,E('b',null,'plek van X'),' is het nummer (1 t/m 5) van de plek waar X in jullie opgeloste hoofdpuzzel staat.'),E('li',null,E('b',null,'aantal letters van X'),' is het aantal letters van dat woord, bijvoorbeeld Hond = 4.')),
 E('table',null,S.pz.map((_,i)=>E('tr',null,E('td',null,`P${i+1}`),E('td',null,S.val[i]))))),
 E('div',{class:'card'},E('table',null,b.steps.map(x=>E('tr',null,E('td',null,x))))),
 E('label',null,'Cijferslot (de uitkomst van de laatste regel)',fc),E('p',{class:'mu'},'Je hebt 3 kansen.'),
@@ -372,7 +384,7 @@ function host(){S.tmEl=E('b');S.rowEls=S.pz.map(()=>E('div',{class:'card'}));S.a
 put(app,E('div',{class:'bar'},E('span',null,'Hoofdpuzzel'),E('span',null,E('button',{on:{click:e=>{MUTE=!MUTE;e.target.textContent=MUTE?'Geluid aan':'Geluid uit'}}},'Geluid uit'),'Resterende tijd ',S.tmEl)),
 E('h3',null,'Hoofdpuzzel – groot logigram'),big,S.ansEl,S.calcEl,abortBtn());S.pz.forEach((_,i)=>row(i));
 const sv=S;setTimeout(()=>{if(S!==sv)return;const b=mkBig(rng(S.seed*131+99991),S.pz.length),bt=E('div');S.big=b;if(S.sv&&S.sv.bigSel)b.sel=S.sv.bigSel;big.className='';
-put(big,E('div',{class:'card'},'Vijf categorieën (plek, naam, beroep, kleur en huisdier) met elk zes items. Plek 1 staat links en plek 6 rechts. Elk item hoort bij precies één plek. Zoek bij elke plek het juiste item. Reken op 10 tot 15 minuten. Rond de puzzel pas af als je zeker bent: daarna volgen de antwoorden van de spelers en de laatste som.'),E('ol',null,b.clues.map(c=>E('li',null,c))),bt);
+put(big,E('div',{class:'card'},'Vier categorieën (plek, naam, beroep en kleur) met elk vijf items. Plek 1 staat links en plek 5 rechts. Elk item hoort bij precies één plek. Zoek bij elke plek het juiste item. Reken op ongeveer 10 minuten. Rond de puzzel pas af als je zeker bent: daarna volgen de antwoorden van de spelers en de laatste som.'),E('ol',null,b.clues.map(c=>E('li',null,c))),bt);
 logTable(bt,b,{locked:!!(S.sv&&S.sv.ph),done:m=>{put(m,'Hoofdpuzzel afgerond.');showAns()}})},40)}
 (function(){let d=null;try{d=loadSave()}catch(e){}if(d)resume(d);else{let seen=false;try{seen=!!localStorage.getItem(KS)}catch(e){}seen?home():uitleg()}})();
 </script></body></html>
